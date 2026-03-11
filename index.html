@@ -1279,10 +1279,7 @@ canvas {
   50%     { box-shadow: 0 0 12px currentColor; }
 }
 
-/* Tab switcher buttons */
-#tab-quests-btn, #tab-blueprints-btn {
-  min-width: 120px;
-}
+/* Tab switcher removed */
 
 /* ════════════════════════════════════════════
    COLLAPSIBLE SIDEBAR
@@ -1473,7 +1470,7 @@ canvas {
     <div class="nav-section-label">◆ PROGRESSO</div>
     <button class="nav-btn" onclick="goTo('progress')"><span class="nav-icon">📊</span><span>STATS</span></button>
     <button class="nav-btn" onclick="goTo('history')"><span class="nav-icon">📜</span><span>LOG</span></button>
-    <button class="nav-btn" onclick="goTo('goals')"><span class="nav-icon">🎯</span><span>QUESTS</span></button>
+    <button class="nav-btn" onclick="goTo('goals')"><span class="nav-icon">🗺</span><span>BLUEPRINTS</span></button>
   </div>
 
   <div class="nav-section">
@@ -1575,7 +1572,7 @@ canvas {
       <div class="card" style="border-color:var(--cyan)44;">
         <div style="display:flex;justify-content:space-between;align-items:center;" class="card-title">
           <span>▶ BLUEPRINTS</span>
-          <span style="font-size:8px;color:var(--cyan);cursor:pointer;" onclick="goTo('goals');setTimeout(()=>switchGoalTab('blueprints'),100);">ABRIR →</span>
+          <span style="font-size:8px;color:var(--cyan);cursor:pointer;" onclick="goTo('goals')">ABRIR →</span>
         </div>
         <div id="dash-blueprints"></div>
       </div>
@@ -1810,65 +1807,18 @@ canvas {
 </section>
 
 <!-- ══════════════════════════════
-     GOALS / QUESTS + BLUEPRINTS
+     BLUEPRINTS
 ══════════════════════════════ -->
 <section class="page" id="page-goals">
   <div class="page-header">
     <div>
-      <div class="page-title">🎯 QUESTS & BLUEPRINTS</div>
-      <div class="page-sub">METAS DE TEMPO + ROTEIROS DE ESTUDO</div>
+      <div class="page-title">🗺 BLUEPRINTS</div>
+      <div class="page-sub">ROTEIROS DE ESTUDO POR TECNOLOGIA</div>
     </div>
-    <!-- Tab switcher -->
-    <div style="display:flex;gap:8px;">
-      <button class="btn btn-green" id="tab-quests-btn" onclick="switchGoalTab('quests')" style="font-size:7px;">📋 QUESTS</button>
-      <button class="btn btn-ghost" id="tab-blueprints-btn" onclick="switchGoalTab('blueprints')" style="font-size:7px;">🗺 BLUEPRINTS</button>
-    </div>
+    <div id="bp-overall-stats" style="text-align:right;font-size:8px;color:var(--muted);"></div>
   </div>
-
-  <!-- ── TAB: QUESTS ── -->
-  <div id="tab-quests">
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title">▶ NOVA QUEST DE TEMPO</div>
-        <div class="form-group">
-          <label class="form-label">NOME DA QUEST</label>
-          <input class="form-input" id="goal-name" placeholder="Ex: Estudar AWS 2h/dia">
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">TIPO</label>
-            <select class="form-select" id="goal-type">
-              <option value="daily">DIÁRIA (min)</option>
-              <option value="weekly">SEMANAL (h)</option>
-              <option value="monthly">MENSAL (h)</option>
-              <option value="total">TOTAL (h)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">META</label>
-            <input class="form-input" id="goal-target" type="number" placeholder="120">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">TECNOLOGIA (OPCIONAL)</label>
-          <select class="form-select" id="goal-subject">
-            <option value="">QUALQUER</option>
-          </select>
-        </div>
-        <button class="btn btn-green" onclick="addGoal()">+ ACEITAR QUEST</button>
-      </div>
-      <div class="card">
-        <div class="card-title">▶ QUESTS ATIVAS</div>
-        <div id="goals-list"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── TAB: BLUEPRINTS ── -->
-  <div id="tab-blueprints" style="display:none;">
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;" id="bp-tech-tabs"></div>
-    <div id="bp-content"></div>
-  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;" id="bp-tech-tabs"></div>
+  <div id="bp-content"></div>
 </section>
 
 <!-- ══════════════════════════════
@@ -3058,15 +3008,20 @@ function getBpPct(d, bpId) {
 // ── BLUEPRINT UI FUNCTIONS ─────────────────────────────────────────
 let activeBpTab = 'linux';
 
-function switchGoalTab(tab) {
-  document.getElementById('tab-quests').style.display    = tab === 'quests'     ? '' : 'none';
-  document.getElementById('tab-blueprints').style.display = tab === 'blueprints' ? '' : 'none';
-  document.getElementById('tab-quests-btn').className    = tab === 'quests'     ? 'btn btn-green' : 'btn btn-ghost';
-  document.getElementById('tab-blueprints-btn').className = tab === 'blueprints' ? 'btn btn-green' : 'btn btn-ghost';
-  if (tab === 'blueprints') renderBlueprints();
-}
+// switchGoalTab removed — blueprints only
 
 function renderBlueprints() {
+  // Overall stats header
+  const statsEl = document.getElementById('bp-overall-stats');
+  if (statsEl) {
+    const total = BLUEPRINTS.reduce((s,b) => s + b.sections.flatMap(sec=>sec.items).length, 0);
+    const done  = (db.bpChecked||[]).length;
+    const pct   = total ? Math.round(done/total*100) : 0;
+    const completed = BLUEPRINTS.filter(b => getBpPct(db,b.id) >= 100).length;
+    statsEl.innerHTML = `
+      <div style="font-size:9px;color:var(--green);">${done}<span style="font-size:7px;color:var(--muted);">/${total} tópicos</span></div>
+      <div style="font-size:7px;color:var(--muted);margin-top:2px;">${completed}/${BLUEPRINTS.length} completos · ${pct}% geral</div>`;
+  }
   // Tech tab bar
   const tabBar = document.getElementById('bp-tech-tabs');
   if (!tabBar) return;
@@ -3957,7 +3912,7 @@ function goTo(page) {
   if (page==='progress')  renderProgress();
   if (page==='history')   renderHistory();
   if (page==='register')  { renderSubjectsList(); populateSubjectSelects(); }
-  if (page==='goals')     { renderGoals(); switchGoalTab('quests'); }
+  if (page==='goals')     renderBlueprints();
   if (page==='badges')    renderBadges();
   if (page==='skills')    renderSkills();
   if (page==='certs')     renderCerts();
@@ -4093,7 +4048,7 @@ function renderDashBlueprints() {
   el.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
       <div style="font-size:6px;color:var(--muted);">${done}/${total} TÓPICOS • ${overallPct}% GERAL</div>
-      <span style="font-size:6px;color:var(--cyan);cursor:pointer;" onclick="goTo('goals');setTimeout(()=>switchGoalTab('blueprints'),100);">VER TODOS →</span>
+      <span style="font-size:6px;color:var(--cyan);cursor:pointer;" onclick="goTo('goals')">VER TODOS →</span>
     </div>
     ${rowsHtml}
     ${done===0?`<div style="font-size:6px;color:var(--dim);text-align:center;padding:8px;">VEJA OS BLUEPRINTS EM QUESTS → BLUEPRINTS</div>`:''}
@@ -4315,12 +4270,11 @@ function deleteSession(id) {
 
 function populateSubjectSelects() {
   const opts = db.subjects.map(s=>`<option value="${s.name}">${s.icon} ${s.name}</option>`).join('');
-  ['reg-subject','goal-subject','timer-subject'].forEach(id => {
+  ['reg-subject','timer-subject'].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
     const prev = el.value;
-    if (id==='goal-subject') el.innerHTML = '<option value="">QUALQUER</option>'+opts;
-    else el.innerHTML = '<option value="">SELECIONE...</option>'+opts;
+    el.innerHTML = '<option value="">SELECIONE...</option>'+opts;
     el.value = prev;
   });
 }
@@ -4524,52 +4478,10 @@ function renderHistory() {
 // ══════════════════════════════════════════════════════
 // GOALS
 // ══════════════════════════════════════════════════════
-function addGoal() {
-  const name=document.getElementById('goal-name').value.trim();
-  const type=document.getElementById('goal-type').value;
-  const target=parseFloat(document.getElementById('goal-target').value);
-  const subject=document.getElementById('goal-subject').value;
-  if(!name||!target){showToast('⚠ PREENCHA TODOS OS CAMPOS!');return;}
-  db.goals.push({id:Date.now(),name,type,target,subject});
-  save(db); renderGoals();
-  document.getElementById('goal-name').value='';
-  document.getElementById('goal-target').value='';
-}
-function getGoalProgress(goal) {
-  const weekStart=getWeekStart(),monthStart=getMonthStart();
-  let sessions=db.sessions;
-  if(goal.subject)sessions=sessions.filter(s=>s.subject===goal.subject);
-  let mins=0;
-  if(goal.type==='daily')mins=totalMins(sessions.filter(s=>s.date===today()));
-  else if(goal.type==='weekly')mins=totalMins(sessions.filter(s=>s.date>=weekStart));
-  else if(goal.type==='monthly')mins=totalMins(sessions.filter(s=>s.date>=monthStart));
-  else mins=totalMins(sessions);
-  const current=goal.type==='daily'?mins:mins/60;
-  const pct=Math.min(Math.round(current/goal.target*100),100);
-  return {current,pct};
-}
-function renderGoals() {
-  populateSubjectSelects();
-  const list=document.getElementById('goals-list');
-  const typeLabels={daily:'DIÁRIA',weekly:'SEMANAL',monthly:'MENSAL',total:'TOTAL'};
-  list.innerHTML = db.goals.length ? db.goals.map(g=>{
-    const {current,pct}=getGoalProgress(g);
-    const unit=g.type==='daily'?'min':'h';
-    const color=pct>=100?'var(--green)':pct>=50?'var(--gold)':'var(--red)';
-    return `<div class="goal-item">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <div style="font-size:6px;color:var(--text);">${g.name}</div>
-        <button class="btn btn-red btn-sm" onclick="deleteGoal(${g.id})">✕</button>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:8px;margin-bottom:6px;">
-        <span style="color:var(--muted);">${typeLabels[g.type]}${g.subject?' · '+g.subject:''}</span>
-        <span style="color:${color};">${current.toFixed(1)}${unit}/${g.target}${unit} · ${pct}%</span>
-      </div>
-      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${color}"></div></div>
-    </div>`;
-  }).join('') : '<div class="empty">NENHUMA QUEST ATIVA<br>ADICIONE UMA META!</div>';
-}
-function deleteGoal(id){db.goals=db.goals.filter(g=>g.id!==id);save(db);renderGoals();}
+function addGoal(){/* removed */}
+function getGoalProgress(goal){return{current:0,pct:0};}
+function renderGoals(){/* removed */}
+function deleteGoal(id){/* removed */}
 
 // ══════════════════════════════════════════════════════
 // BADGES
