@@ -1282,6 +1282,117 @@ canvas {
 #tab-quests-btn, #tab-blueprints-btn {
   min-width: 120px;
 }
+
+/* ════════════════════════════════════════════
+   COLLAPSIBLE SIDEBAR
+════════════════════════════════════════════ */
+.sidebar {
+  transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
+  overflow: hidden;
+}
+.sidebar.collapsed {
+  width: 58px !important;
+}
+.sidebar.collapsed .sidebar-logo .logo-title,
+.sidebar.collapsed .logo-sub,
+.sidebar.collapsed .player-name,
+.sidebar.collapsed #char-title,
+.sidebar.collapsed .player-rank-badge,
+.sidebar.collapsed .xp-bar-wrap,
+.sidebar.collapsed .xp-label,
+.sidebar.collapsed .nav-section-label,
+.sidebar.collapsed .nav-btn span:last-child,
+.sidebar.collapsed #char-stat-row {
+  display: none !important;
+}
+.sidebar.collapsed .nav-btn {
+  justify-content: center;
+  padding: 10px 6px;
+  gap: 0;
+}
+.sidebar.collapsed .nav-icon {
+  font-size: 20px;
+}
+.sidebar.collapsed .nav-section {
+  padding: 6px 4px 2px;
+}
+.sidebar.collapsed #player-char-wrap {
+  width: 44px !important;
+  height: 52px !important;
+  margin: 4px auto !important;
+}
+.sidebar.collapsed #player-char-wrap svg {
+  width: 44px !important;
+  height: 52px !important;
+}
+.sidebar.collapsed .player-card {
+  padding: 8px 4px;
+}
+.sidebar.collapsed .sidebar-logo {
+  padding: 10px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sidebar.collapsed .logo-mini {
+  display: block !important;
+}
+.logo-mini {
+  display: none;
+  font-size: 14px;
+  color: var(--green);
+  text-shadow: 0 0 8px var(--green);
+}
+
+/* Toggle button */
+#sidebar-toggle {
+  position: absolute;
+  top: 50%;
+  right: -16px;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 40px;
+  background: var(--panel);
+  border: 2px solid var(--border);
+  border-left: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: var(--muted);
+  z-index: 100;
+  transition: all 0.2s;
+  font-family: monospace;
+}
+#sidebar-toggle:hover {
+  background: var(--panel2);
+  color: var(--green);
+  border-color: var(--green);
+}
+.sidebar {
+  position: relative;
+}
+
+/* rank-up evolution flash on char */
+@keyframes charEvolve {
+  0%   { filter: brightness(0.3) saturate(0); transform: scale(0.8); }
+  30%  { filter: brightness(3) saturate(2);   transform: scale(1.2); }
+  60%  { filter: brightness(1.5) saturate(1.5); transform: scale(1.05); }
+  100% { filter: brightness(1)   saturate(1);   transform: scale(1); }
+}
+.char-evolving {
+  animation: charEvolve 1.2s ease forwards !important;
+}
+
+/* char hover tooltip */
+#player-char-wrap {
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+#player-char-wrap:hover {
+  transform: scale(1.08) translateY(-2px);
+}
 </style>
 </head>
 <body>
@@ -1309,37 +1420,18 @@ canvas {
 <div class="shell">
 
 <!-- ═══════════ SIDEBAR ═══════════ -->
-<aside class="sidebar">
+<aside class="sidebar" id="main-sidebar">
+  <button id="sidebar-toggle" onclick="toggleSidebar()" title="Recolher menu">◀</button>
   <div class="sidebar-logo">
     <div class="logo-title">⚔ DEVOPS<br>QUEST ⚔</div>
     <div class="logo-sub">STUDY RPG v1.0</div>
+    <div class="logo-mini">⚔</div>
   </div>
 
   <div class="player-card">
-    <!-- Pixel art character SVG -->
-    <svg class="player-avatar" width="48" height="48" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-      <!-- body -->
-      <rect x="5" y="8" width="6" height="5" fill="#1a2a3a"/>
-      <!-- head -->
-      <rect x="4" y="3" width="8" height="6" fill="#f0c090"/>
-      <!-- hair -->
-      <rect x="4" y="3" width="8" height="2" fill="#222"/>
-      <rect x="3" y="4" width="2" height="3" fill="#222"/>
-      <rect x="11" y="4" width="2" height="3" fill="#222"/>
-      <!-- eyes -->
-      <rect x="6" y="6" width="1" height="1" fill="#00ff88"/>
-      <rect x="9" y="6" width="1" height="1" fill="#00ff88"/>
-      <!-- terminal on shirt -->
-      <rect x="6" y="9" width="4" height="3" fill="#0a0a0a"/>
-      <rect x="7" y="10" width="1" height="1" fill="#00ff88"/>
-      <!-- arms -->
-      <rect x="3" y="8" width="2" height="4" fill="#1a2a3a"/>
-      <rect x="11" y="8" width="2" height="4" fill="#1a2a3a"/>
-      <!-- legs -->
-      <rect x="5" y="13" width="2" height="3" fill="#0f1f2f"/>
-      <rect x="9" y="13" width="2" height="3" fill="#0f1f2f"/>
-    </svg>
+    <div id="player-char-wrap" style="width:80px;height:96px;margin:0 auto 8px;position:relative;"></div>
 
+    <div id="char-title" style="font-size:5px;text-align:center;color:#cd7f32;letter-spacing:1px;margin-bottom:4px;text-shadow:0 0 6px #cd7f32;">PLEBEU</div>
     <div class="player-name" id="sidebar-player-name">DEVOPS HERO</div>
     <div class="player-rank-badge">
       <span class="rank-icon" id="sidebar-rank-icon">🥉</span>
@@ -1354,7 +1446,7 @@ canvas {
         <div class="xp-fill" id="sidebar-xp-bar" style="width:0%"></div>
       </div>
     </div>
-    <div style="display:flex;justify-content:space-between;font-size:5px;color:var(--muted);margin-top:6px;">
+    <div id="char-stat-row" style="display:flex;justify-content:space-between;font-size:5px;color:var(--muted);margin-top:6px;">
       <span>LV <span id="sidebar-level" style="color:var(--gold)">1</span></span>
       <span style="color:var(--gold)">⭐ <span id="sidebar-total-xp">0</span> XP</span>
     </div>
@@ -3135,6 +3227,624 @@ function checkAllBp(bpId) {
 }
 
 
+const CHAR_SVGS = {
+  ferro: `<svg id="char-svg" width="80" height="96" viewBox="0 0 16 20" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;display:block;margin:0 auto;">
+  <!-- shadow -->
+  <ellipse cx="8" cy="19.5" rx="4" ry="0.8" fill="rgba(0,0,0,0.4)"/>
+  <!-- ragged robe bottom -->
+  <rect x="4" y="14" width="2" height="4" fill="#3a2a18"/>
+  <rect x="6" y="14" width="4" height="5" fill="#2e1e0e"/>
+  <rect x="10" y="14" width="2" height="4" fill="#3a2a18"/>
+  <!-- ragged tears -->
+  <rect x="5" y="17" width="1" height="2" fill="#1a0e00"/>
+  <rect x="10" y="16" width="1" height="2" fill="#1a0e00"/>
+  <!-- body - torn shirt -->
+  <rect x="4" y="9" width="8" height="6" fill="#2e1e0e"/>
+  <rect x="5" y="10" width="2" height="2" fill="#1a0e00"/>
+  <rect x="9" y="11" width="2" height="1" fill="#1a0e00"/>
+  <!-- patch -->
+  <rect x="7" y="10" width="2" height="2" fill="#4a2e18"/>
+  <!-- arms ragged -->
+  <rect x="2" y="9" width="2" height="4" fill="#c8845a"/>
+  <rect x="12" y="9" width="2" height="4" fill="#c8845a"/>
+  <rect x="2" y="12" width="2" height="1" fill="#2e1e0e"/>
+  <!-- neck -->
+  <rect x="7" y="7" width="2" height="2" fill="#c8845a"/>
+  <!-- head -->
+  <rect x="4" y="3" width="8" height="6" fill="#c8845a"/>
+  <!-- dirty hair - messy -->
+  <rect x="4" y="2" width="8" height="2" fill="#1a0e00"/>
+  <rect x="3" y="3" width="2" height="3" fill="#1a0e00"/>
+  <rect x="11" y="3" width="2" height="2" fill="#1a0e00"/>
+  <rect x="4" y="2" width="1" height="1" fill="#2a1800"/>
+  <rect x="11" y="2" width="1" height="1" fill="#2a1800"/>
+  <!-- sad eyes -->
+  <rect x="6" y="5" width="1" height="2" fill="#3a2a10"/>
+  <rect x="9" y="5" width="1" height="2" fill="#3a2a10"/>
+  <!-- frown -->
+  <rect x="6" y="7" width="1" height="1" fill="#a06040"/>
+  <rect x="9" y="7" width="1" height="1" fill="#a06040"/>
+  <rect x="7" y="8" width="2" height="1" fill="#a06040"/>
+  <!-- dirt spots -->
+  <rect x="5" y="4" width="1" height="1" fill="#8a5a35" opacity="0.5"/>
+  <rect x="10" y="5" width="1" height="1" fill="#8a5a35" opacity="0.5"/>
+  <!-- walking stick -->
+  <rect x="13" y="5" width="1" height="14" fill="#5a3a18"/>
+  <rect x="12" y="5" width="2" height="1" fill="#7a5a30"/>
+</svg>`,
+  bronze: `<svg id="char-svg" width="80" height="96" viewBox="0 0 16 20" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;display:block;margin:0 auto;">
+  <ellipse cx="8" cy="19.5" rx="4" ry="0.8" fill="rgba(0,0,0,0.4)"/>
+  <!-- boots -->
+  <rect x="4" y="15" width="3" height="4" fill="#5a3e28"/>
+  <rect x="9" y="15" width="3" height="4" fill="#5a3e28"/>
+  <rect x="4" y="18" width="3" height="1" fill="#3a2010"/>
+  <rect x="9" y="18" width="3" height="1" fill="#3a2010"/>
+  <!-- pants -->
+  <rect x="4" y="13" width="8" height="3" fill="#4a3428"/>
+  <!-- leather armor -->
+  <rect x="3" y="8" width="10" height="6" fill="#8a6040"/>
+  <rect x="4" y="9" width="8" height="4" fill="#7a5030"/>
+  <!-- buckles -->
+  <rect x="7" y="9" width="2" height="1" fill="#c8901a"/>
+  <rect x="7" y="11" width="2" height="1" fill="#c8901a"/>
+  <!-- shoulder pads -->
+  <rect x="2" y="8" width="3" height="3" fill="#9a7050"/>
+  <rect x="11" y="8" width="3" height="3" fill="#9a7050"/>
+  <!-- arms -->
+  <rect x="2" y="11" width="2" height="3" fill="#c8845a"/>
+  <rect x="12" y="11" width="2" height="3" fill="#c8845a"/>
+  <!-- fists -->
+  <rect x="2" y="14" width="2" height="2" fill="#c8845a"/>
+  <rect x="12" y="14" width="2" height="2" fill="#c8845a"/>
+  <!-- neck -->
+  <rect x="7" y="6" width="2" height="2" fill="#c8845a"/>
+  <!-- head -->
+  <rect x="4" y="2" width="8" height="6" fill="#c8845a"/>
+  <!-- short hair -->
+  <rect x="4" y="2" width="8" height="1" fill="#3a2010"/>
+  <rect x="3" y="3" width="2" height="2" fill="#3a2010"/>
+  <rect x="11" y="3" width="2" height="2" fill="#3a2010"/>
+  <!-- determined eyes -->
+  <rect x="6" y="4" width="1" height="2" fill="#2a5a8a"/>
+  <rect x="9" y="4" width="1" height="2" fill="#2a5a8a"/>
+  <!-- slight smile -->
+  <rect x="7" y="6" width="2" height="1" fill="#e09070"/>
+  <!-- bronze glow -->
+  <rect x="0" y="0" width="16" height="20" fill="none" opacity="0.1"/>
+</svg>`,
+  prata: `<svg id="char-svg" width="80" height="96" viewBox="0 0 16 20" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;display:block;margin:0 auto;">
+  <ellipse cx="8" cy="19.5" rx="4" ry="0.8" fill="rgba(0,0,0,0.4)"/>
+  <!-- armored boots -->
+  <rect x="4" y="15" width="3" height="4" fill="#7a8a9a"/>
+  <rect x="9" y="15" width="3" height="4" fill="#7a8a9a"/>
+  <rect x="4" y="14" width="3" height="2" fill="#9aabb8"/>
+  <rect x="9" y="14" width="3" height="2" fill="#9aabb8"/>
+  <!-- leg armor -->
+  <rect x="4" y="12" width="3" height="3" fill="#8a9aaa"/>
+  <rect x="9" y="12" width="3" height="3" fill="#8a9aaa"/>
+  <!-- chest plate -->
+  <rect x="3" y="7" width="10" height="6" fill="#9aabb8"/>
+  <rect x="4" y="8" width="8" height="4" fill="#b0c0cc"/>
+  <!-- chest details -->
+  <rect x="7" y="8" width="2" height="4" fill="#9aabb8"/>
+  <rect x="4" y="10" width="8" height="1" fill="#9aabb8"/>
+  <!-- silver glow lines -->
+  <rect x="5" y="9" width="2" height="1" fill="#d0e0ec"/>
+  <rect x="9" y="9" width="2" height="1" fill="#d0e0ec"/>
+  <!-- shoulder plates -->
+  <rect x="2" y="7" width="2" height="3" fill="#b0c0cc"/>
+  <rect x="12" y="7" width="2" height="3" fill="#b0c0cc"/>
+  <!-- arms armored -->
+  <rect x="2" y="10" width="2" height="4" fill="#9aabb8"/>
+  <rect x="12" y="10" width="2" height="4" fill="#9aabb8"/>
+  <!-- gauntlets -->
+  <rect x="2" y="14" width="2" height="2" fill="#b0c0cc"/>
+  <rect x="12" y="14" width="2" height="2" fill="#b0c0cc"/>
+  <!-- neck -->
+  <rect x="6" y="5" width="4" height="2" fill="#9aabb8"/>
+  <!-- helmet -->
+  <rect x="3" y="0" width="10" height="7" fill="#9aabb8"/>
+  <rect x="4" y="1" width="8" height="5" fill="#b0c0cc"/>
+  <!-- visor open - face visible -->
+  <rect x="5" y="2" width="6" height="3" fill="#c8845a"/>
+  <!-- eyes -->
+  <rect x="6" y="3" width="1" height="2" fill="#00ccff"/>
+  <rect x="9" y="3" width="1" height="2" fill="#00ccff"/>
+  <!-- chin guard -->
+  <rect x="4" y="5" width="8" height="2" fill="#9aabb8"/>
+  <!-- helmet crest -->
+  <rect x="6" y="0" width="4" height="1" fill="#c8c8d8"/>
+  <rect x="7" y="-1" width="2" height="1" fill="#e0e0f0"/>
+</svg>`,
+  ouro: `<svg id="char-svg" width="80" height="96" viewBox="0 0 16 20" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;display:block;margin:0 auto;">
+  <ellipse cx="8" cy="19.5" rx="5" ry="1" fill="rgba(255,215,0,0.3)"/>
+  <!-- gold boots -->
+  <rect x="4" y="15" width="3" height="4" fill="#c8901a"/>
+  <rect x="9" y="15" width="3" height="4" fill="#c8901a"/>
+  <rect x="4" y="14" width="3" height="2" fill="#e8b030"/>
+  <rect x="9" y="14" width="3" height="2" fill="#e8b030"/>
+  <!-- leg armor gold -->
+  <rect x="4" y="11" width="3" height="4" fill="#d8a020"/>
+  <rect x="9" y="11" width="3" height="4" fill="#d8a020"/>
+  <rect x="4" y="11" width="3" height="1" fill="#f0c840"/>
+  <rect x="9" y="11" width="3" height="1" fill="#f0c840"/>
+  <!-- cape back -->
+  <rect x="2" y="7" width="12" height="10" fill="#c80000"/>
+  <rect x="3" y="7" width="10" height="9" fill="#e00000"/>
+  <!-- chest plate gold -->
+  <rect x="3" y="6" width="10" height="6" fill="#d8a020"/>
+  <rect x="4" y="7" width="8" height="4" fill="#f0c840"/>
+  <!-- gold engravings -->
+  <rect x="6" y="7" width="1" height="4" fill="#e8b030"/>
+  <rect x="9" y="7" width="1" height="4" fill="#e8b030"/>
+  <rect x="4" y="9" width="8" height="1" fill="#e8b030"/>
+  <rect x="5" y="8" width="2" height="1" fill="#fff8c0"/>
+  <rect x="9" y="8" width="2" height="1" fill="#fff8c0"/>
+  <!-- shoulder plates big -->
+  <rect x="1" y="6" width="3" height="4" fill="#e8b030"/>
+  <rect x="12" y="6" width="3" height="4" fill="#e8b030"/>
+  <rect x="1" y="5" width="3" height="1" fill="#f0c840"/>
+  <rect x="12" y="5" width="3" height="1" fill="#f0c840"/>
+  <!-- arms -->
+  <rect x="1" y="10" width="2" height="4" fill="#d8a020"/>
+  <rect x="13" y="10" width="2" height="4" fill="#d8a020"/>
+  <rect x="0" y="13" width="3" height="2" fill="#c8901a"/>
+  <rect x="13" y="13" width="3" height="2" fill="#c8901a"/>
+  <!-- golden helmet -->
+  <rect x="3" y="0" width="10" height="7" fill="#d8a020"/>
+  <rect x="4" y="1" width="8" height="5" fill="#f0c840"/>
+  <!-- face opening -->
+  <rect x="5" y="2" width="6" height="4" fill="#c8845a"/>
+  <!-- glowing eyes -->
+  <rect x="6" y="3" width="1" height="2" fill="#ffee00"/>
+  <rect x="9" y="3" width="1" height="2" fill="#ffee00"/>
+  <rect x="6" y="3" width="1" height="1" fill="#fff8c0"/>
+  <rect x="9" y="3" width="1" height="1" fill="#fff8c0"/>
+  <!-- heroic expression -->
+  <rect x="7" y="5" width="2" height="1" fill="#e09070"/>
+  <!-- crown on helmet -->
+  <rect x="5" y="0" width="6" height="1" fill="#f0c840"/>
+  <rect x="6" y="-1" width="1" height="2" fill="#f0c840"/>
+  <rect x="8" y="-1" width="1" height="2" fill="#f0c840"/>
+  <rect x="10" y="-1" width="1" height="2" fill="#f0c840"/>
+  <rect x="6" y="-1" width="1" height="1" fill="#fff0a0"/>
+  <rect x="8" y="-1" width="1" height="1" fill="#fff0a0"/>
+  <rect x="10" y="-1" width="1" height="1" fill="#fff0a0"/>
+  <!-- gold glow aura -->
+  <rect x="2" y="2" width="1" height="1" fill="#ffee00" opacity="0.4"/>
+  <rect x="13" y="2" width="1" height="1" fill="#ffee00" opacity="0.4"/>
+</svg>`,
+  platina: `<svg id="char-svg" width="80" height="96" viewBox="0 0 16 20" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;display:block;margin:0 auto;">
+  <ellipse cx="8" cy="19.5" rx="5" ry="1" fill="rgba(200,240,255,0.4)"/>
+  <!-- light aura bottom -->
+  <rect x="3" y="17" width="10" height="2" fill="#e0f8ff" opacity="0.3"/>
+  <!-- boots platinum -->
+  <rect x="4" y="15" width="3" height="4" fill="#aac8d8"/>
+  <rect x="9" y="15" width="3" height="4" fill="#aac8d8"/>
+  <rect x="3" y="14" width="4" height="2" fill="#c8e8f8"/>
+  <rect x="9" y="14" width="4" height="2" fill="#c8e8f8"/>
+  <!-- leg armor -->
+  <rect x="4" y="11" width="3" height="4" fill="#b8d8e8"/>
+  <rect x="9" y="11" width="3" height="4" fill="#b8d8e8"/>
+  <!-- divine cape -->
+  <rect x="1" y="6" width="14" height="12" fill="#9090e0"/>
+  <rect x="2" y="6" width="12" height="11" fill="#b0b0f0"/>
+  <!-- rune on cape -->
+  <rect x="7" y="9" width="2" height="4" fill="#e0e0ff"/>
+  <rect x="6" y="10" width="4" height="2" fill="#e0e0ff"/>
+  <!-- breast plate platinum -->
+  <rect x="3" y="5" width="10" height="7" fill="#c8e8f8"/>
+  <rect x="4" y="6" width="8" height="5" fill="#e0f4ff"/>
+  <!-- light patterns -->
+  <rect x="5" y="7" width="6" height="1" fill="#ffffff" opacity="0.8"/>
+  <rect x="6" y="6" width="1" height="4" fill="#c0e8ff"/>
+  <rect x="9" y="6" width="1" height="4" fill="#c0e8ff"/>
+  <!-- shoulder holy armor -->
+  <rect x="1" y="5" width="3" height="4" fill="#c8e8f8"/>
+  <rect x="12" y="5" width="3" height="4" fill="#c8e8f8"/>
+  <rect x="0" y="4" width="4" height="2" fill="#e0f4ff"/>
+  <rect x="12" y="4" width="4" height="2" fill="#e0f4ff"/>
+  <!-- arms -->
+  <rect x="1" y="9" width="2" height="4" fill="#b8d8e8"/>
+  <rect x="13" y="9" width="2" height="4" fill="#b8d8e8"/>
+  <!-- glowing gauntlets -->
+  <rect x="0" y="12" width="3" height="3" fill="#c8e8f8"/>
+  <rect x="13" y="12" width="3" height="3" fill="#c8e8f8"/>
+  <rect x="1" y="13" width="1" height="1" fill="#ffffff" opacity="0.9"/>
+  <rect x="14" y="13" width="1" height="1" fill="#ffffff" opacity="0.9"/>
+  <!-- holy helmet -->
+  <rect x="3" y="0" width="10" height="6" fill="#c8e8f8"/>
+  <rect x="4" y="1" width="8" height="4" fill="#e0f4ff"/>
+  <!-- face opening -->
+  <rect x="5" y="1" width="6" height="4" fill="#c8d0e0"/>
+  <!-- divine eyes glowing white-blue -->
+  <rect x="6" y="2" width="2" height="2" fill="#80e0ff"/>
+  <rect x="9" y="2" width="2" height="2" fill="#80e0ff"/>
+  <rect x="6" y="2" width="1" height="1" fill="#ffffff"/>
+  <rect x="9" y="2" width="1" height="1" fill="#ffffff"/>
+  <!-- holy halo -->
+  <rect x="5" y="0" width="6" height="1" fill="#e0f8ff"/>
+  <rect x="4" y="-1" width="8" height="1" fill="#c0eeff" opacity="0.8"/>
+  <rect x="6" y="-2" width="4" height="1" fill="#a0e4ff" opacity="0.6"/>
+  <!-- light ray particles -->
+  <rect x="1" y="3" width="1" height="1" fill="#e0f8ff" opacity="0.6"/>
+  <rect x="14" y="3" width="1" height="1" fill="#e0f8ff" opacity="0.6"/>
+  <rect x="0" y="7" width="1" height="1" fill="#c8e8ff" opacity="0.5"/>
+  <rect x="15" y="7" width="1" height="1" fill="#c8e8ff" opacity="0.5"/>
+</svg>`,
+  diamante: `<svg id="char-svg" width="80" height="96" viewBox="0 0 16 20" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;display:block;margin:0 auto;">
+  <ellipse cx="8" cy="19.5" rx="5" ry="1.2" fill="rgba(80,200,255,0.5)"/>
+  <!-- magic aura glow -->
+  <rect x="2" y="3" width="12" height="16" fill="#00a8e8" opacity="0.08"/>
+  <!-- star/diamond particles -->
+  <rect x="1" y="5" width="1" height="1" fill="#00eeff" opacity="0.8"/>
+  <rect x="14" y="8" width="1" height="1" fill="#00eeff" opacity="0.8"/>
+  <rect x="0" y="12" width="1" height="1" fill="#80dfff" opacity="0.6"/>
+  <rect x="15" y="4" width="1" height="1" fill="#80dfff" opacity="0.6"/>
+  <rect x="2" y="1" width="1" height="1" fill="#ffffff" opacity="0.5"/>
+  <rect x="13" y="1" width="1" height="1" fill="#ffffff" opacity="0.5"/>
+  <!-- cosmic robe bottom -->
+  <rect x="3" y="13" width="10" height="6" fill="#001040"/>
+  <rect x="4" y="13" width="8" height="6" fill="#001858"/>
+  <!-- star pattern on robe -->
+  <rect x="5" y="14" width="1" height="1" fill="#00eeff" opacity="0.8"/>
+  <rect x="8" y="15" width="1" height="1" fill="#00eeff" opacity="0.8"/>
+  <rect x="11" y="14" width="1" height="1" fill="#00eeff" opacity="0.8"/>
+  <rect x="6" y="17" width="1" height="1" fill="#80dfff" opacity="0.6"/>
+  <rect x="10" y="17" width="1" height="1" fill="#80dfff" opacity="0.6"/>
+  <!-- cosmic armor -->
+  <rect x="3" y="7" width="10" height="7" fill="#002060"/>
+  <rect x="4" y="8" width="8" height="5" fill="#003080"/>
+  <!-- star pattern chest -->
+  <rect x="6" y="9" width="1" height="1" fill="#00eeff"/>
+  <rect x="9" y="9" width="1" height="1" fill="#00eeff"/>
+  <rect x="7" y="11" width="2" height="1" fill="#00eeff"/>
+  <rect x="6" y="8" width="4" height="1" fill="#0050a0"/>
+  <!-- cosmic shoulder pads -->
+  <rect x="1" y="7" width="3" height="4" fill="#002060"/>
+  <rect x="12" y="7" width="3" height="4" fill="#002060"/>
+  <rect x="0" y="6" width="4" height="2" fill="#00a8e8" opacity="0.8"/>
+  <rect x="12" y="6" width="4" height="2" fill="#00a8e8" opacity="0.8"/>
+  <!-- magical arms -->
+  <rect x="1" y="11" width="2" height="4" fill="#002060"/>
+  <rect x="13" y="11" width="2" height="4" fill="#002060"/>
+  <!-- orbs in hands -->
+  <rect x="0" y="14" width="3" height="3" fill="#0080c0"/>
+  <rect x="13" y="14" width="3" height="3" fill="#0080c0"/>
+  <rect x="1" y="15" width="1" height="1" fill="#00eeff"/>
+  <rect x="14" y="15" width="1" height="1" fill="#00eeff"/>
+  <!-- cosmic hood/mask -->
+  <rect x="3" y="1" width="10" height="7" fill="#001858"/>
+  <rect x="4" y="2" width="8" height="5" fill="#002060"/>
+  <!-- star mask face -->
+  <rect x="5" y="3" width="6" height="4" fill="#001040"/>
+  <!-- glowing diamond eyes -->
+  <rect x="5" y="4" width="2" height="2" fill="#00ccff"/>
+  <rect x="9" y="4" width="2" height="2" fill="#00ccff"/>
+  <rect x="5" y="4" width="1" height="1" fill="#80ffff"/>
+  <rect x="9" y="4" width="1" height="1" fill="#80ffff"/>
+  <!-- star on forehead -->
+  <rect x="7" y="3" width="2" height="1" fill="#00eeff"/>
+  <rect x="8" y="2" width="1" height="3" fill="#00eeff" opacity="0.6"/>
+  <!-- cosmic cape -->
+  <rect x="2" y="7" width="1" height="8" fill="#001040"/>
+  <rect x="13" y="7" width="1" height="8" fill="#001040"/>
+  <!-- cosmic crown -->
+  <rect x="4" y="1" width="8" height="1" fill="#0080c0"/>
+  <rect x="5" y="0" width="1" height="2" fill="#00eeff"/>
+  <rect x="7" y="-1" width="2" height="2" fill="#00eeff"/>
+  <rect x="10" y="0" width="1" height="2" fill="#00eeff"/>
+  <rect x="7" y="-1" width="2" height="1" fill="#80ffff"/>
+</svg>`,
+  mestre: `<svg id="char-svg" width="80" height="96" viewBox="0 0 16 20" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;display:block;margin:0 auto;">
+  <ellipse cx="8" cy="19.5" rx="6" ry="1.5" fill="rgba(170,80,255,0.5)"/>
+  <!-- void aura -->
+  <rect x="1" y="2" width="14" height="17" fill="#5000a0" opacity="0.08"/>
+  <!-- arcane particles -->
+  <rect x="0" y="4" width="1" height="1" fill="#cc00ff" opacity="0.9"/>
+  <rect x="15" y="6" width="1" height="1" fill="#cc00ff" opacity="0.9"/>
+  <rect x="1" y="14" width="1" height="1" fill="#8800ff" opacity="0.7"/>
+  <rect x="14" y="11" width="1" height="1" fill="#8800ff" opacity="0.7"/>
+  <rect x="2" y="8" width="1" height="1" fill="#ff88ff" opacity="0.5"/>
+  <rect x="13" y="15" width="1" height="1" fill="#ff88ff" opacity="0.5"/>
+  <!-- flowing dark robe -->
+  <rect x="2" y="12" width="12" height="7" fill="#1a0030"/>
+  <rect x="3" y="12" width="10" height="7" fill="#200040"/>
+  <!-- arcane runes on robe -->
+  <rect x="5" y="13" width="1" height="3" fill="#9900ff" opacity="0.8"/>
+  <rect x="4" y="14" width="3" height="1" fill="#9900ff" opacity="0.8"/>
+  <rect x="10" y="13" width="1" height="3" fill="#9900ff" opacity="0.8"/>
+  <rect x="9" y="14" width="3" height="1" fill="#9900ff" opacity="0.8"/>
+  <rect x="7" y="16" width="2" height="2" fill="#cc44ff" opacity="0.7"/>
+  <!-- arcane chestplate -->
+  <rect x="3" y="6" width="10" height="7" fill="#200040"/>
+  <rect x="4" y="7" width="8" height="5" fill="#2a0050"/>
+  <!-- arcane eye on chest -->
+  <rect x="6" y="8" width="4" height="3" fill="#1a0030"/>
+  <rect x="7" y="8" width="2" height="3" fill="#9900ff" opacity="0.9"/>
+  <rect x="6" y="9" width="4" height="1" fill="#9900ff" opacity="0.9"/>
+  <rect x="7" y="9" width="2" height="1" fill="#ff44ff"/>
+  <!-- void pauldrons -->
+  <rect x="0" y="5" width="4" height="5" fill="#200040"/>
+  <rect x="12" y="5" width="4" height="5" fill="#200040"/>
+  <rect x="0" y="4" width="5" height="2" fill="#cc00ff" opacity="0.7"/>
+  <rect x="11" y="4" width="5" height="2" fill="#cc00ff" opacity="0.7"/>
+  <!-- flowing sleeves -->
+  <rect x="0" y="9" width="3" height="5" fill="#200040"/>
+  <rect x="13" y="9" width="3" height="5" fill="#200040"/>
+  <!-- arcane hands with runes -->
+  <rect x="0" y="13" width="2" height="3" fill="#3a0060"/>
+  <rect x="14" y="13" width="2" height="3" fill="#3a0060"/>
+  <rect x="0" y="14" width="2" height="1" fill="#cc00ff" opacity="0.8"/>
+  <rect x="14" y="14" width="2" height="1" fill="#cc00ff" opacity="0.8"/>
+  <!-- void mask head -->
+  <rect x="3" y="1" width="10" height="6" fill="#1a0030"/>
+  <rect x="4" y="2" width="8" height="4" fill="#200040"/>
+  <!-- arcane face with glowing marks -->
+  <rect x="5" y="2" width="6" height="4" fill="#0e0020"/>
+  <!-- void eyes - glowing purple -->
+  <rect x="5" y="3" width="2" height="2" fill="#aa00ff"/>
+  <rect x="9" y="3" width="2" height="2" fill="#aa00ff"/>
+  <rect x="5" y="3" width="1" height="1" fill="#ff88ff"/>
+  <rect x="9" y="3" width="1" height="1" fill="#ff88ff"/>
+  <!-- arcane marks on face -->
+  <rect x="7" y="5" width="2" height="1" fill="#6600cc" opacity="0.8"/>
+  <!-- crown of void energy -->
+  <rect x="4" y="1" width="8" height="1" fill="#3a0060"/>
+  <rect x="5" y="0" width="2" height="2" fill="#cc00ff" opacity="0.8"/>
+  <rect x="9" y="0" width="2" height="2" fill="#cc00ff" opacity="0.8"/>
+  <rect x="7" y="-1" width="2" height="3" fill="#ff44ff" opacity="0.9"/>
+  <rect x="7" y="-1" width="2" height="1" fill="#ffffff" opacity="0.7"/>
+  <!-- void wings hint -->
+  <rect x="1" y="6" width="2" height="6" fill="#400080" opacity="0.6"/>
+  <rect x="13" y="6" width="2" height="6" fill="#400080" opacity="0.6"/>
+</svg>`,
+  grao_mestre: `<svg id="char-svg" width="80" height="96" viewBox="0 0 16 20" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;display:block;margin:0 auto;">
+  <ellipse cx="8" cy="19.5" rx="7" ry="1.5" fill="rgba(255,200,50,0.6)"/>
+  <!-- solar aura -->
+  <rect x="0" y="1" width="16" height="18" fill="#ff8800" opacity="0.06"/>
+  <!-- light rays -->
+  <rect x="0" y="5" width="2" height="1" fill="#ffcc00" opacity="0.7"/>
+  <rect x="14" y="3" width="2" height="1" fill="#ffcc00" opacity="0.7"/>
+  <rect x="1" y="12" width="1" height="2" fill="#ff8800" opacity="0.6"/>
+  <rect x="14" y="10" width="1" height="2" fill="#ff8800" opacity="0.6"/>
+  <rect x="0" y="16" width="2" height="1" fill="#ffaa00" opacity="0.5"/>
+  <rect x="15" y="14" width="1" height="1" fill="#ffaa00" opacity="0.5"/>
+  <!-- divine robe -->
+  <rect x="2" y="11" width="12" height="8" fill="#1a0820"/>
+  <rect x="3" y="11" width="10" height="8" fill="#280c30"/>
+  <!-- divine patterns -->
+  <rect x="5" y="12" width="6" height="1" fill="#ffcc00" opacity="0.7"/>
+  <rect x="6" y="14" width="1" height="3" fill="#ff8800" opacity="0.8"/>
+  <rect x="9" y="14" width="1" height="3" fill="#ff8800" opacity="0.8"/>
+  <rect x="7" y="13" width="2" height="1" fill="#ffcc00"/>
+  <rect x="5" y="17" width="2" height="1" fill="#ffcc00" opacity="0.6"/>
+  <rect x="9" y="17" width="2" height="1" fill="#ffcc00" opacity="0.6"/>
+  <!-- celestial armor -->
+  <rect x="2" y="5" width="12" height="7" fill="#1a0820"/>
+  <rect x="3" y="6" width="10" height="5" fill="#280c30"/>
+  <!-- sun symbol chest -->
+  <rect x="6" y="7" width="4" height="4" fill="#1a0820"/>
+  <rect x="7" y="7" width="2" height="4" fill="#ffcc00" opacity="0.9"/>
+  <rect x="6" y="8" width="4" height="2" fill="#ffcc00" opacity="0.9"/>
+  <rect x="7" y="8" width="2" height="2" fill="#ffffff" opacity="0.8"/>
+  <!-- divine pauldrons -->
+  <rect x="0" y="4" width="3" height="5" fill="#1a0820"/>
+  <rect x="13" y="4" width="3" height="5" fill="#1a0820"/>
+  <rect x="-1" y="3" width="4" height="2" fill="#ffcc00" opacity="0.8"/>
+  <rect x="13" y="3" width="4" height="2" fill="#ffcc00" opacity="0.8"/>
+  <!-- divine wings -->
+  <rect x="-1" y="5" width="3" height="8" fill="#ff8800" opacity="0.5"/>
+  <rect x="14" y="5" width="3" height="8" fill="#ff8800" opacity="0.5"/>
+  <rect x="-1" y="6" width="2" height="6" fill="#ffcc00" opacity="0.4"/>
+  <rect x="15" y="6" width="2" height="6" fill="#ffcc00" opacity="0.4"/>
+  <!-- arms -->
+  <rect x="0" y="9" width="3" height="5" fill="#1a0820"/>
+  <rect x="13" y="9" width="3" height="5" fill="#1a0820"/>
+  <!-- divine hands -->
+  <rect x="0" y="13" width="3" height="2" fill="#280c30"/>
+  <rect x="13" y="13" width="3" height="2" fill="#280c30"/>
+  <rect x="1" y="13" width="1" height="1" fill="#ffcc00" opacity="0.9"/>
+  <rect x="14" y="13" width="1" height="1" fill="#ffcc00" opacity="0.9"/>
+  <!-- divine head/helm -->
+  <rect x="3" y="0" width="10" height="6" fill="#1a0820"/>
+  <rect x="4" y="1" width="8" height="4" fill="#280c30"/>
+  <!-- face of power -->
+  <rect x="5" y="1" width="6" height="4" fill="#c88050"/>
+  <!-- burning eyes - fire color -->
+  <rect x="5" y="2" width="2" height="2" fill="#ff6600"/>
+  <rect x="9" y="2" width="2" height="2" fill="#ff6600"/>
+  <rect x="5" y="2" width="1" height="1" fill="#ffee00"/>
+  <rect x="9" y="2" width="1" height="1" fill="#ffee00"/>
+  <!-- divine crown -->
+  <rect x="4" y="0" width="8" height="1" fill="#ffcc00"/>
+  <rect x="5" y="-1" width="1" height="2" fill="#ffcc00"/>
+  <rect x="7" y="-2" width="2" height="3" fill="#ffcc00"/>
+  <rect x="10" y="-1" width="1" height="2" fill="#ffcc00"/>
+  <rect x="7" y="-2" width="2" height="1" fill="#ffffff"/>
+  <!-- solar halo -->
+  <rect x="3" y="-1" width="10" height="1" fill="#ff8800" opacity="0.6"/>
+  <rect x="2" y="0" width="12" height="1" fill="#ffcc00" opacity="0.4"/>
+</svg>`,
+  challenger: `<svg id="char-svg" width="80" height="96" viewBox="0 0 16 20" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;display:block;margin:0 auto;">
+  <!-- divine ground glow -->
+  <ellipse cx="8" cy="19.5" rx="8" ry="2" fill="rgba(255,255,255,0.6)"/>
+  <rect x="0" y="17" width="16" height="3" fill="#ffffff" opacity="0.15"/>
+  <!-- full body divine aura -->
+  <rect x="0" y="0" width="16" height="20" fill="#ffe080" opacity="0.07"/>
+  <!-- light particles everywhere -->
+  <rect x="0" y="2" width="1" height="1" fill="#ffffff" opacity="0.9"/>
+  <rect x="15" y="4" width="1" height="1" fill="#ffffff" opacity="0.9"/>
+  <rect x="1" y="10" width="1" height="1" fill="#ffe080" opacity="0.8"/>
+  <rect x="14" y="8" width="1" height="1" fill="#ffe080" opacity="0.8"/>
+  <rect x="0" y="15" width="1" height="1" fill="#ffffff" opacity="0.7"/>
+  <rect x="15" y="13" width="1" height="1" fill="#ffffff" opacity="0.7"/>
+  <rect x="2" y="1" width="1" height="1" fill="#ffc060" opacity="0.6"/>
+  <rect x="13" y="2" width="1" height="1" fill="#ffc060" opacity="0.6"/>
+  <!-- divine robes - white and gold -->
+  <rect x="2" y="10" width="12" height="9" fill="#e8e8f8"/>
+  <rect x="3" y="10" width="10" height="9" fill="#f0f0ff"/>
+  <!-- golden hem -->
+  <rect x="2" y="10" width="12" height="1" fill="#ffd700"/>
+  <rect x="2" y="18" width="12" height="1" fill="#ffd700"/>
+  <!-- divine fabric folds -->
+  <rect x="5" y="11" width="1" height="7" fill="#d8d8f0"/>
+  <rect x="8" y="11" width="1" height="7" fill="#d8d8f0"/>
+  <rect x="11" y="11" width="1" height="7" fill="#d8d8f0"/>
+  <!-- golden belt -->
+  <rect x="3" y="13" width="10" height="1" fill="#ffd700"/>
+  <rect x="7" y="13" width="2" height="2" fill="#ffd700"/>
+  <rect x="7" y="13" width="2" height="1" fill="#ffffff" opacity="0.8"/>
+  <!-- divine breastplate white/gold -->
+  <rect x="3" y="5" width="10" height="6" fill="#e8e8f8"/>
+  <rect x="4" y="6" width="8" height="4" fill="#f8f8ff"/>
+  <!-- sunburst on chest -->
+  <rect x="7" y="6" width="2" height="4" fill="#ffd700" opacity="0.9"/>
+  <rect x="5" y="7" width="6" height="2" fill="#ffd700" opacity="0.9"/>
+  <rect x="6" y="6" width="4" height="4" fill="#ffffff" opacity="0.6"/>
+  <rect x="7" y="7" width="2" height="2" fill="#ffe080"/>
+  <!-- divine wings - full spread -->
+  <rect x="-2" y="4" width="5" height="3" fill="#ffffff" opacity="0.8"/>
+  <rect x="-2" y="7" width="4" height="4" fill="#f0f0ff" opacity="0.7"/>
+  <rect x="-2" y="11" width="3" height="4" fill="#e0e8ff" opacity="0.6"/>
+  <rect x="13" y="4" width="5" height="3" fill="#ffffff" opacity="0.8"/>
+  <rect x="14" y="7" width="4" height="4" fill="#f0f0ff" opacity="0.7"/>
+  <rect x="15" y="11" width="3" height="4" fill="#e0e8ff" opacity="0.6"/>
+  <!-- wing feather detail -->
+  <rect x="-1" y="5" width="3" height="1" fill="#ffd700" opacity="0.5"/>
+  <rect x="-1" y="8" width="2" height="1" fill="#ffd700" opacity="0.4"/>
+  <rect x="14" y="5" width="3" height="1" fill="#ffd700" opacity="0.5"/>
+  <rect x="15" y="8" width="2" height="1" fill="#ffd700" opacity="0.4"/>
+  <!-- divine pauldrons -->
+  <rect x="1" y="4" width="3" height="3" fill="#e8e8f8"/>
+  <rect x="12" y="4" width="3" height="3" fill="#e8e8f8"/>
+  <rect x="0" y="3" width="4" height="2" fill="#ffd700"/>
+  <rect x="12" y="3" width="4" height="2" fill="#ffd700"/>
+  <!-- arms divine -->
+  <rect x="1" y="7" width="2" height="4" fill="#e8e8f8"/>
+  <rect x="13" y="7" width="2" height="4" fill="#e8e8f8"/>
+  <!-- divine hands with power -->
+  <rect x="0" y="11" width="3" height="2" fill="#ffe080"/>
+  <rect x="13" y="11" width="3" height="2" fill="#ffe080"/>
+  <rect x="0" y="11" width="2" height="1" fill="#ffffff" opacity="0.8"/>
+  <rect x="14" y="11" width="2" height="1" fill="#ffffff" opacity="0.8"/>
+  <!-- DIVINE FACE -->
+  <!-- neck -->
+  <rect x="6" y="3" width="4" height="2" fill="#f0d8b0"/>
+  <!-- head -->
+  <rect x="4" y="0" width="8" height="5" fill="#f0d8b0"/>
+  <!-- divine golden hair -->
+  <rect x="4" y="0" width="8" height="1" fill="#ffd700"/>
+  <rect x="3" y="1" width="2" height="3" fill="#ffd700"/>
+  <rect x="11" y="1" width="2" height="3" fill="#ffd700"/>
+  <!-- perfect face - glowing white eyes -->
+  <rect x="5" y="1" width="2" height="2" fill="#ffffff"/>
+  <rect x="9" y="1" width="2" height="2" fill="#ffffff"/>
+  <rect x="5" y="1" width="1" height="1" fill="#ffe080"/>
+  <rect x="9" y="1" width="1" height="1" fill="#ffe080"/>
+  <!-- divine smile -->
+  <rect x="6" y="3" width="4" height="1" fill="#e8b080"/>
+  <rect x="6" y="4" width="1" height="1" fill="#f0c890"/>
+  <rect x="9" y="4" width="1" height="1" fill="#f0c890"/>
+  <!-- OLYMPIC CROWN -->
+  <rect x="3" y="-1" width="10" height="2" fill="#ffd700"/>
+  <rect x="4" y="-2" width="2" height="2" fill="#ffd700"/>
+  <rect x="7" y="-3" width="2" height="4" fill="#ffd700"/>
+  <rect x="10" y="-2" width="2" height="2" fill="#ffd700"/>
+  <!-- gems in crown -->
+  <rect x="4" y="-1" width="1" height="1" fill="#ff4444"/>
+  <rect x="7" y="-2" width="2" height="1" fill="#ffffff"/>
+  <rect x="10" y="-1" width="1" height="1" fill="#4444ff"/>
+  <!-- divine halo ring -->
+  <rect x="2" y="-1" width="12" height="1" fill="#ffffff" opacity="0.7"/>
+  <rect x="1" y="0" width="14" height="1" fill="#ffe080" opacity="0.5"/>
+  <rect x="3" y="-2" width="10" height="1" fill="#ffd700" opacity="0.6"/>
+</svg>`
+};
+
+const RANK_TO_CHAR = {
+  'rank-iron': 'ferro',
+  'rank-bronze': 'bronze',
+  'rank-silver': 'prata',
+  'rank-gold': 'ouro',
+  'rank-platinum': 'platina',
+  'rank-diamond': 'diamante',
+  'rank-master': 'mestre',
+  'rank-grandmaster': 'grao_mestre',
+  'rank-challenger': 'challenger'
+};
+
+const CHAR_LABELS = {
+  ferro: 'PLEBEU',
+  bronze: 'APRENDIZ',
+  prata: 'GUERREIRO',
+  ouro: 'CAVALEIRO',
+  platina: 'PALADINO',
+  diamante: 'MAGO DAS ESTRELAS',
+  mestre: 'SEMI-DEUS',
+  grao_mestre: 'ARCANISTA CELESTIAL',
+  challenger: 'DEUS DO OLIMPO'
+};
+
+
+function updatePlayerCharacter() {
+  const xp = db.totalXP || 0;
+  const { rank } = getRankForXP(xp);
+  const charKey = RANK_TO_CHAR[rank.class] || 'ferro';
+  const wrap = document.getElementById('player-char-wrap');
+  const labelEl = document.getElementById('char-title');
+  if (!wrap) return;
+  const prevKey = wrap.dataset.charKey;
+  if (prevKey === charKey) return; // no change
+  // Animation: flash + swap
+  wrap.style.transition = 'opacity 0.2s';
+  wrap.style.opacity = '0';
+  setTimeout(() => {
+    wrap.innerHTML = CHAR_SVGS[charKey] || CHAR_SVGS.ferro;
+    wrap.dataset.charKey = charKey;
+    // Trigger evolution animation
+    const svgEl = wrap.querySelector('svg');
+    if (svgEl) {
+      svgEl.classList.add('char-evolving');
+      svgEl.addEventListener('animationend', () => svgEl.classList.remove('char-evolving'), {once:true});
+    }
+    if (labelEl) {
+      labelEl.textContent = CHAR_LABELS[charKey] || 'HERÓI';
+      // Color by tier
+      const tierColors = {
+        ferro:'#888',bronze:'#cd7f32',prata:'#c0c0c0',ouro:'#ffd700',
+        platina:'#e0f0ff',diamante:'#00ccff',mestre:'#aa44ff',
+        grao_mestre:'#ff8800',challenger:'#ffffff'
+      };
+      labelEl.style.color = tierColors[charKey] || 'var(--gold)';
+      labelEl.style.textShadow = `0 0 8px ${tierColors[charKey] || 'var(--gold)'}`;
+    }
+    wrap.style.opacity = '1';
+  }, 200);
+}
+
+// Force initial render (no animation)
+function initPlayerCharacter() {
+  const xp = db.totalXP || 0;
+  const { rank } = getRankForXP(xp);
+  const charKey = RANK_TO_CHAR[rank.class] || 'ferro';
+  const wrap = document.getElementById('player-char-wrap');
+  const labelEl = document.getElementById('char-title');
+  if (!wrap) return;
+  wrap.innerHTML = CHAR_SVGS[charKey] || CHAR_SVGS.ferro;
+  wrap.dataset.charKey = charKey;
+  if (labelEl) {
+    labelEl.textContent = CHAR_LABELS[charKey] || 'HERÓI';
+    const tierColors = {
+      ferro:'#888',bronze:'#cd7f32',prata:'#c0c0c0',ouro:'#ffd700',
+      platina:'#e0f0ff',diamante:'#00ccff',mestre:'#aa44ff',
+      grao_mestre:'#ff8800',challenger:'#ffffff'
+    };
+    labelEl.style.color = tierColors[charKey] || 'var(--gold)';
+    labelEl.style.textShadow = `0 0 8px ${tierColors[charKey] || 'var(--gold)'}`;
+  }
+}
+
 function loadData() {
   try {
     const raw = localStorage.getItem(KEY);
@@ -3262,6 +3972,7 @@ function updateSidebar() {
   document.getElementById('dash-rank-name').textContent = rank.name;
   document.getElementById('stat-xp').textContent = xp.toLocaleString();
   document.getElementById('stat-xp-sub').textContent = 'NÍVEL '+level;
+  updatePlayerCharacter();
 }
 
 // ══════════════════════════════════════════════════════
@@ -4507,6 +5218,7 @@ if(!db.totalXP && db.sessions.length){
 populateSubjectSelects();
 checkAndUnlockBadges();
 updateSidebar();
+initPlayerCharacter();
 renderDashboard();
 
 // ══════════════════════════════════════════════════════
@@ -4782,6 +5494,38 @@ setTimeout(() => {
     setTimeout(() => boot.remove(), 400);
   }
 }, 2800);
+
+
+// ── SIDEBAR COLLAPSE ──────────────────────────────────────────────
+let _sidebarCollapsed = localStorage.getItem('sidebar_collapsed') === '1';
+function toggleSidebar() {
+  _sidebarCollapsed = !_sidebarCollapsed;
+  applyCollapsed();
+  localStorage.setItem('sidebar_collapsed', _sidebarCollapsed ? '1' : '0');
+}
+function applyCollapsed() {
+  const sb = document.getElementById('main-sidebar');
+  const btn = document.getElementById('sidebar-toggle');
+  if (!sb) return;
+  if (_sidebarCollapsed) {
+    sb.classList.add('collapsed');
+    if (btn) btn.textContent = '▶';
+    if (btn) btn.title = 'Expandir menu';
+  } else {
+    sb.classList.remove('collapsed');
+    if (btn) btn.textContent = '◀';
+    if (btn) btn.title = 'Recolher menu';
+  }
+}
+// Apply on load (after DOM ready)
+setTimeout(applyCollapsed, 10);
+// Click on char to expand sidebar if collapsed
+document.addEventListener('DOMContentLoaded', function() {
+  const wrap = document.getElementById('player-char-wrap');
+  if (wrap) wrap.addEventListener('click', function() {
+    if (_sidebarCollapsed) toggleSidebar();
+  });
+});
 
 </script>
 </body>
