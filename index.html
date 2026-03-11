@@ -1423,7 +1423,7 @@ canvas {
     <div class="stat-card" style="border-color:var(--purple);">
       <div class="stat-label">XP TOTAL</div>
       <div class="stat-value" style="color:var(--purple)" id="stat-xp">0</div>
-      <div class="stat-delta" id="stat-xp-sub">nível 1</div>
+      <div class="stat-delta" id="stat-xp-sub">NÍVEL 1</div>
     </div>
   </div>
 
@@ -1459,8 +1459,17 @@ canvas {
         <div class="tech-grid" id="dash-tech-skills"></div>
       </div>
       <div class="card">
-        <div class="card-title">▶ EMBLEMAS RECENTES</div>
-        <div id="dash-badges" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;" class="card-title">
+          <span>▶ EMBLEMAS RECENTES</span>
+        </div>
+        <div id="dash-badges" style="display:flex;flex-wrap:wrap;gap:4px;align-items:flex-start;"></div>
+      </div>
+      <div class="card" style="border-color:var(--cyan)44;">
+        <div style="display:flex;justify-content:space-between;align-items:center;" class="card-title">
+          <span>▶ BLUEPRINTS</span>
+          <span style="font-size:5px;color:var(--cyan);cursor:pointer;" onclick="goTo('goals');setTimeout(()=>switchGoalTab('blueprints'),100);">ABRIR →</span>
+        </div>
+        <div id="dash-blueprints"></div>
       </div>
     </div>
   </div>
@@ -3130,7 +3139,16 @@ function loadData() {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return getDefault();
-    return JSON.parse(raw);
+    const d = JSON.parse(raw);
+    // Garantir campos novos para saves antigos
+    if (!d.bpChecked)      d.bpChecked = [];
+    if (!d.unlockedBadges) d.unlockedBadges = [];
+    if (!d.goals)          d.goals = [];
+    if (!d.certs)          d.certs = [];
+    if (!d.sessions)       d.sessions = [];
+    if (!d.subjects || !d.subjects.length) d.subjects = JSON.parse(JSON.stringify(DEFAULT_SUBJECTS));
+    if (!d.totalXP)        d.totalXP = d.sessions.reduce((s,x)=>s+(x.xp||0),0);
+    return d;
   } catch { return getDefault(); }
 }
 function getDefault() {
@@ -3243,7 +3261,7 @@ function updateSidebar() {
   document.getElementById('dash-level').textContent = level;
   document.getElementById('dash-rank-name').textContent = rank.name;
   document.getElementById('stat-xp').textContent = xp.toLocaleString();
-  document.getElementById('stat-xp-sub').textContent = 'nível '+level;
+  document.getElementById('stat-xp-sub').textContent = 'NÍVEL '+level;
 }
 
 // ══════════════════════════════════════════════════════
@@ -3274,8 +3292,9 @@ function renderDashboard() {
   document.getElementById('stat-month').textContent = fmtH(totalMins(monthSessions));
   document.getElementById('stat-month-sub').textContent = activeDays+' DIAS ATIVOS';
 
-  // Rank display in dashboard
+  // Rank + XP + Level display in dashboard
   const xp = db.totalXP || 0;
+  const level = getLevel(xp);
   const { rank, idx } = getRankForXP(xp);
   const next = RANKS[idx+1];
   const pct = next ? Math.round((xp - rank.xpMin) / (rank.xpMax - rank.xpMin) * 100) : 100;
@@ -3286,6 +3305,14 @@ function renderDashboard() {
     next ? `${xp.toLocaleString()} / ${rank.xpMax.toLocaleString()} XP` : 'RANK MÁXIMO!';
   document.getElementById('dash-rank-bar').style.width = pct+'%';
   document.getElementById('dash-rank-bar').style.background = rank.color;
+  // XP stat card
+  if (document.getElementById('stat-xp')) {
+    document.getElementById('stat-xp').textContent = xp.toLocaleString();
+    document.getElementById('stat-xp-sub').textContent = 'NÍVEL ' + level;
+  }
+  // Header level + rank name
+  if (document.getElementById('dash-level'))   document.getElementById('dash-level').textContent = level;
+  if (document.getElementById('dash-rank-name')) document.getElementById('dash-rank-name').textContent = rank.name;
 
   // Week bar
   renderWeekBar();
@@ -3301,6 +3328,49 @@ function renderDashboard() {
   const list = document.getElementById('recent-sessions');
   list.innerHTML = recent.length ? recent.map(s => sessionHTML(s, false)).join('') :
     `<div class="empty"><span class="empty-icon">🗡</span>NENHUMA MISSÃO AINDA<br>REGISTRE SEU PRIMEIRO ESTUDO!</div>`;
+
+  // Blueprint progress widget
+  renderDashBlueprints();
+}
+
+function renderDashBlueprints() {
+  const el = document.getElementById('dash-blueprints');
+  if (!el) return;
+  const total = BLUEPRINTS.reduce((s,b) => s + b.sections.flatMap(sec=>sec.items).length, 0);
+  const done  = (db.bpChecked||[]).length;
+  const overallPct = total ? Math.round(done/total*100) : 0;
+
+  // Top 6 blueprints by progress
+  const bpRows = BLUEPRINTS.map(bp => {
+    const pct = getBpPct(db, bp.id);
+    return {bp, pct};
+  }).sort((a,b) => b.pct - a.pct).slice(0,6);
+
+  const rowsHtml = bpRows.map(({bp, pct}) => {
+    const col = pct===100?'var(--green)':pct>=50?'var(--gold)':pct>0?'var(--cyan)':'var(--dim)';
+    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">
+      <div style="font-size:14px;width:20px;text-align:center;">${bp.icon}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+          <span style="font-size:5px;color:${pct>0?'var(--text)':'var(--muted)'};">${bp.name}</span>
+          <span style="font-size:5px;color:${col};">${pct}%</span>
+        </div>
+        <div style="height:4px;background:var(--dim);overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:${col};transition:width 0.6s;${pct>0?'box-shadow:0 0 4px '+col:''}"></div>
+        </div>
+      </div>
+      ${pct===100?'<div style="font-size:10px;">✅</div>':''}
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div style="font-size:6px;color:var(--muted);">${done}/${total} TÓPICOS • ${overallPct}% GERAL</div>
+      <span style="font-size:6px;color:var(--cyan);cursor:pointer;" onclick="goTo('goals');setTimeout(()=>switchGoalTab('blueprints'),100);">VER TODOS →</span>
+    </div>
+    ${rowsHtml}
+    ${done===0?`<div style="font-size:6px;color:var(--dim);text-align:center;padding:8px;">VEJA OS BLUEPRINTS EM QUESTS → BLUEPRINTS</div>`:''}
+  `;
 }
 
 function renderWeekBar() {
@@ -3349,11 +3419,28 @@ function renderDashTechSkills() {
 }
 
 function renderDashBadges() {
-  const unlocked = BADGES_DEF.filter(b => db.unlockedBadges?.includes(b.id));
+  const ALL_BADGES = [...BADGES_DEF, ...BLUEPRINT_BADGES];
+  const rarityColors = {common:'var(--muted)',uncommon:'var(--green)',rare:'var(--blue)',epic:'var(--purple)',legendary:'var(--gold)'};
+  const unlocked = ALL_BADGES.filter(b => db.unlockedBadges?.includes(b.id));
   const el = document.getElementById('dash-badges');
-  el.innerHTML = unlocked.length ? unlocked.slice(-6).map(b =>
-    `<div title="${b.name}: ${b.desc}" style="font-size:24px;cursor:default;">${b.icon}</div>`
-  ).join('') : `<div style="font-size:6px;color:var(--muted);">COMPLETE MISSÕES PARA DESBLOQUEAR!</div>`;
+  if (!unlocked.length) {
+    el.innerHTML = `<div style="font-size:6px;color:var(--muted);">COMPLETE MISSÕES PARA DESBLOQUEAR!</div>`;
+    return;
+  }
+  // Show last 8 unlocked, most recent first
+  const recent = [...unlocked].reverse().slice(0, 8);
+  el.innerHTML = recent.map(b => {
+    const rc = rarityColors[b.rarity||'common'];
+    return `<div title="${b.name}: ${b.desc}" style="display:flex;flex-direction:column;align-items:center;gap:3px;cursor:default;padding:4px;">
+      <div style="font-size:22px;filter:drop-shadow(0 0 4px ${rc});">${b.icon}</div>
+      <div style="font-size:4px;color:${rc};text-align:center;max-width:50px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${b.name}</div>
+    </div>`;
+  }).join('');
+  // Badge count summary
+  el.innerHTML += `<div style="width:100%;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:6px;color:var(--muted);">
+    ${unlocked.length} / ${ALL_BADGES.length} DESBLOQUEADOS
+    <span style="color:var(--gold);margin-left:8px;cursor:pointer;" onclick="goTo('badges')">VER TODOS →</span>
+  </div>`;
 }
 
 // ══════════════════════════════════════════════════════
@@ -3425,15 +3512,28 @@ function saveSession() {
 }
 
 function checkAndUnlockBadges() {
-  // Merge blueprint badges dynamically
+  // Merge all badges
   const allBadges = [...BADGES_DEF, ...BLUEPRINT_BADGES];
   if (!db.unlockedBadges) db.unlockedBadges = [];
+  let newlyUnlocked = [];
   allBadges.forEach(b => {
-    if (!db.unlockedBadges.includes(b.id) && b.check(db)) {
-      db.unlockedBadges.push(b.id);
-      setTimeout(() => showToast(`🏆 EMBLEMA DESBLOQUEADO: ${b.name}!`), 800);
+    if (!db.unlockedBadges.includes(b.id)) {
+      try {
+        if (b.check(db)) {
+          db.unlockedBadges.push(b.id);
+          db.totalXP = (db.totalXP||0) + (b.xp||0);
+          newlyUnlocked.push(b);
+        }
+      } catch(e) { /* skip bad check */ }
     }
   });
+  // Show notifications for newly unlocked (staggered)
+  newlyUnlocked.forEach((b, i) => {
+    setTimeout(() => {
+      showToast(`🏆 EMBLEMA: ${b.name}! +${b.xp} XP`);
+    }, 800 + i * 600);
+  });
+  return newlyUnlocked;
 }
 
 function clearRegForm() {
@@ -4289,11 +4389,22 @@ function closeLevelUp(){document.getElementById('levelup-modal').classList.remov
 // SETTINGS
 // ══════════════════════════════════════════════════════
 function exportData() {
+  // Garantir campos antes de exportar
+  if(!db.bpChecked)      db.bpChecked=[];
+  if(!db.unlockedBadges) db.unlockedBadges=[];
+  save(db);
   const json=JSON.stringify(db,null,2);
   const blob=new Blob([json],{type:'application/json'});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download=`devops-quest-save-${today()}.json`;a.click();URL.revokeObjectURL(url);
-  showToast('📤 SAVE EXPORTADO!');
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`devops-quest-save-${today()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  const bpCount=(db.bpChecked||[]).length;
+  showToast(`📤 SAVE EXPORTADO! ${db.sessions.length} sessões • ${bpCount} bp itens`);
 }
 function importData(event) {
   const file=event.target.files[0]; if(!file)return;
@@ -4302,16 +4413,37 @@ function importData(event) {
     try {
       const imported=JSON.parse(e.target.result);
       if(!imported.sessions||!Array.isArray(imported.sessions))throw new Error('FORMATO INVÁLIDO');
-      if(!confirm(`IMPORTAR SAVE? ${imported.sessions.length} SESSÕES SERÃO CARREGADAS. DADOS ATUAIS SERÃO SUBSTITUÍDOS.`))return;
-      db=imported; if(!db.unlockedBadges)db.unlockedBadges=[];
-      if(!db.totalXP)db.totalXP=db.sessions.reduce((s,x)=>s+(x.xp||0),0);
-      save(db); updateSidebar(); renderDbStats();
-      showToast('✓ SAVE CARREGADO!');
+      const sessCount=imported.sessions.length;
+      const bpCount=(imported.bpChecked||[]).length;
+      if(!confirm(`IMPORTAR SAVE?\n• ${sessCount} SESSÕES\n• ${bpCount} BLUEPRINT ITENS\nDados atuais serão substituídos.`))return;
+      db=imported;
+      // Garantir campos obrigatórios
+      if(!db.unlockedBadges) db.unlockedBadges=[];
+      if(!db.bpChecked)      db.bpChecked=[];
+      if(!db.goals)          db.goals=[];
+      if(!db.certs)          db.certs=[];
+      if(!db.subjects||!db.subjects.length) db.subjects=JSON.parse(JSON.stringify(DEFAULT_SUBJECTS));
+      if(!db.totalXP)        db.totalXP=db.sessions.reduce((s,x)=>s+(x.xp||0),0);
+      save(db);
+      // Re-renderizar tudo
+      updateSidebar();
+      renderDashboard();
+      renderDbStats();
+      checkAndUnlockBadges();
+      showToast('✓ SAVE CARREGADO! ' + sessCount + ' SESSÕES');
     } catch(err){showToast('⚠ ARQUIVO INVÁLIDO!');}
   };
   reader.readAsText(file); event.target.value='';
 }
-function clearAllData(){db=getDefault();save(db);updateSidebar();renderDbStats();showToast('SAVE DELETADO.');}
+function clearAllData(){
+  if(!confirm('DELETAR TODOS OS DADOS?\nEsta ação não pode ser desfeita!'))return;
+  db=getDefault();
+  save(db);
+  updateSidebar();
+  renderDashboard();
+  renderDbStats();
+  showToast('SAVE DELETADO. COMEÇANDO DO ZERO!');
+}
 function renderDbStats() {
   const xp=db.totalXP||0;
   const {rank}=getRankForXP(xp);
@@ -4320,7 +4452,8 @@ function renderDbStats() {
     <div>TECNOLOGIAS: <span style="color:var(--text)">${db.subjects.length}</span></div>
     <div>QUESTS: <span style="color:var(--text)">${db.goals.length}</span></div>
     <div>CERTIFICADOS: <span style="color:var(--gold)">${db.certs.length}</span></div>
-    <div>EMBLEMAS: <span style="color:var(--gold)">${(db.unlockedBadges||[]).length}/${BADGES_DEF.length}</span></div>
+    <div>EMBLEMAS: <span style="color:var(--gold)">${(db.unlockedBadges||[]).length}/${BADGES_DEF.length+BLUEPRINT_BADGES.length}</span></div>
+    <div>BLUEPRINTS: <span style="color:var(--cyan)">${(db.bpChecked||[]).length} TÓPICOS</span></div>
     <div>XP TOTAL: <span style="color:var(--purple)">${xp.toLocaleString()}</span></div>
     <div>RANK: <span style="color:${rank.color}">${rank.name}</span></div>
     <div>NÍVEL: <span style="color:var(--cyan)">${getLevel(xp)}</span></div>
@@ -4330,11 +4463,27 @@ function renderDbStats() {
 // ══════════════════════════════════════════════════════
 // TOAST
 // ══════════════════════════════════════════════════════
-function showToast(msg) {
-  let t=document.getElementById('toast');
-  if(!t){t=document.createElement('div');t.id='toast';document.body.appendChild(t);}
-  t.textContent=msg; t.style.opacity='1';
-  clearTimeout(t._t); t._t=setTimeout(()=>{t.style.opacity='0';},3000);
+// Toast queue - shows multiple notifications sequentially
+const _toastQueue = [];
+let _toastShowing = false;
+function showToast(msg, duration) {
+  _toastQueue.push({msg, duration: duration||3000});
+  if (!_toastShowing) _processToastQueue();
+}
+function _processToastQueue() {
+  if (!_toastQueue.length) { _toastShowing=false; return; }
+  _toastShowing = true;
+  const {msg, duration} = _toastQueue.shift();
+  let t = document.getElementById('toast');
+  if (!t) { t=document.createElement('div'); t.id='toast'; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(t._t);
+  t._t = setTimeout(() => {
+    t.style.opacity = '0';
+    setTimeout(() => _processToastQueue(), 400);
+  }, duration);
 }
 
 // ══════════════════════════════════════════════════════
@@ -4578,7 +4727,7 @@ window.checkAndUnlockBadges = function() {
   const after = db.unlockedBadges || [];
   const newOnes = after.filter(id => !before.includes(id));
   newOnes.forEach((id, idx) => {
-    const badge = BADGES_DEF.find(b => b.id === id);
+    const badge = [...BADGES_DEF, ...BLUEPRINT_BADGES].find(b => b.id === id);
     if (!badge) return;
     setTimeout(() => {
       const rarityColors = {common:'#00ff88',uncommon:'#00ff88',rare:'#00aaff',epic:'#aa44ff',legendary:'#ffd700'};
