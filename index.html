@@ -1644,6 +1644,28 @@ canvas { max-width: 100%; }
 
 /* ── Ensure stat cards don't overflow text ── */
 .stat-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── SKILL CARDS ─────────────────────────────────────── */
+.skill-card {
+  transition: transform 0.15s, box-shadow 0.15s;
+  min-width: 0;
+}
+.skill-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 4px 8px 0 var(--black), 0 0 20px rgba(0,255,136,0.1) !important;
+}
+/* Mobile: 1 column */
+@media (max-width: 600px) {
+  #skills-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+/* Tablet: 2 columns */
+@media (min-width: 601px) and (max-width: 1100px) {
+  #skills-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -2083,12 +2105,12 @@ canvas { max-width: 100%; }
 <!-- ══════════════════════════════
      SKILLS PAGE
 ══════════════════════════════ -->
-<section class="page" id="page-skills">
+<section class="page" id="page-skills" style="max-width:1400px;">
   <div class="page-header">
     <div class="page-title">⚡ SKILL TREE</div>
     <div class="page-sub">NÍVEL POR TECNOLOGIA</div>
   </div>
-  <div id="skills-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;"></div>
+  <div id="skills-grid" style="display:grid;gap:20px;"></div>
 </section>
 
 <!-- ══════════════════════════════
@@ -4879,17 +4901,19 @@ function renderSkills() {
   });
 
   const grid=document.getElementById('skills-grid');
-  grid.style.gridTemplateColumns='repeat(auto-fill,minmax(130px,1fr))';
+  // Cards com largura mínima generosa — nunca ficam pequenos demais
+  grid.style.gridTemplateColumns='repeat(auto-fill,minmax(260px,1fr))';
+  grid.style.gap='20px';
   let html='';
 
   Object.entries(byCat).forEach(([catKey,subjects])=>{
     const catInfo=CATS[catKey]||{label:'⚙ OUTROS',color:'#00ff88'};
     const catTotal=subjects.reduce((sum,s)=>{const d=bySubj[s.name];return sum+(d?d.mins:0)},0);
 
-    html+=`<div style="grid-column:1/-1;margin:20px 0 10px;display:flex;align-items:center;gap:12px;">
-      <div style="font-size:7px;color:${catInfo.color};text-shadow:0 0 8px ${catInfo.color};letter-spacing:2px;">${catInfo.label}</div>
+    html+=`<div style="grid-column:1/-1;margin:24px 0 12px;display:flex;align-items:center;gap:14px;">
+      <div style="font-size:9px;color:${catInfo.color};text-shadow:0 0 10px ${catInfo.color};letter-spacing:3px;">${catInfo.label}</div>
       <div style="flex:1;height:2px;background:var(--border);"></div>
-      <div style="font-size:8px;color:var(--muted);">TOTAL: ${fmtH(catTotal)}</div>
+      <div style="font-size:8px;color:var(--muted);letter-spacing:1px;">TOTAL: ${fmtH(catTotal)}</div>
     </div>`;
 
     subjects.forEach(s=>{
@@ -4898,7 +4922,6 @@ function renderSkills() {
       const levelTitle=getLevelTitle(level);
       const levelColor=getLevelColor(level);
       const color=s.color||'#00ff88';
-      // XP to next level
       const nextLevelMins=LEVEL_MINS[level]||LEVEL_MINS[LEVEL_MINS.length-1];
       const prevLevelMins=LEVEL_MINS[level-1]||0;
       const pct=nextLevelMins>prevLevelMins?Math.round((data.mins-prevLevelMins)/(nextLevelMins-prevLevelMins)*100):100;
@@ -4907,55 +4930,69 @@ function renderSkills() {
       const diffColor=topDiff?getDiffColor(topDiff):'var(--muted)';
       const isMaxed=level>=20;
       const desc=s.desc||'';
+      const hasData=data.sessions>0;
 
-      // Skill tiers visual
-      const filledDots=Math.min(level,10);
-      const dots=[...Array(10)].map((_,i)=>`<div style="width:6px;height:6px;background:${i<filledDots?color:'var(--dim)'};border:1px solid ${i<filledDots?color:'var(--border)'};${i<filledDots?'box-shadow:0 0 3px '+color:''};"></div>`).join('');
+      // 10 dots progress bar (cada dot = 2 níveis)
+      const filledDots=Math.min(Math.ceil(level/2),10);
+      const dots=[...Array(10)].map((_,i)=>`<div style="width:10px;height:10px;background:${i<filledDots?color:'var(--dim)'};border:1px solid ${i<filledDots?color:'var(--border)'};${i<filledDots?'box-shadow:0 0 4px '+color:''};flex-shrink:0;"></div>`).join('');
 
-      html+=`<div class="card" style="border-color:${data.sessions>0?color+'44':'var(--border)'};position:relative;overflow:hidden;">
-        ${data.sessions>0?`<div style="position:absolute;top:0;left:0;right:0;height:2px;background:${color};"></div>`:''}
-        <!-- Header -->
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-          <div style="font-size:28px;filter:${data.sessions>0?'drop-shadow(0 0 6px '+color+')':'grayscale(1) brightness(0.4)'};">${s.icon||'⚙'}</div>
+      html+=`<div class="card skill-card" style="border-color:${hasData?color+'55':'var(--border)'};position:relative;overflow:hidden;padding:18px 20px;">
+        <!-- color top bar -->
+        ${hasData?`<div style="position:absolute;top:0;left:0;right:0;height:3px;background:${color};box-shadow:0 0 8px ${color};"></div>`:''}
+
+        <!-- HEADER: icon + name + level number -->
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+          <div style="font-size:36px;line-height:1;filter:${hasData?'drop-shadow(0 0 8px '+color+')':'grayscale(1) brightness(0.3)'};">${s.icon||'⚙'}</div>
           <div style="flex:1;min-width:0;">
-            <div style="font-size:7px;color:${data.sessions>0?color:'var(--muted)'};text-shadow:${data.sessions>0?'0 0 8px '+color:'none'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.name}</div>
-            <div style="font-size:8px;color:var(--muted);margin-top:3px;">${desc.substring(0,30)}${desc.length>30?'...':''}</div>
+            <div style="font-size:10px;color:${hasData?color:'var(--muted)'};text-shadow:${hasData?'0 0 10px '+color:'none'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:1px;">${s.name}</div>
+            ${desc?`<div style="font-size:7px;color:var(--dim);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${desc.substring(0,36)}${desc.length>36?'…':''}</div>`:''}
           </div>
-          <div style="text-align:center;flex-shrink:0;">
-            <div style="font-size:18px;color:${levelColor};text-shadow:0 0 8px ${levelColor};font-family:'Press Start 2P',monospace;">${level}</div>
-            <div style="font-size:7px;color:${levelColor};">LV</div>
-          </div>
-        </div>
-        <!-- Level title -->
-        <div style="text-align:center;font-size:8px;color:${levelColor};border:1px solid ${levelColor};padding:3px 8px;margin-bottom:10px;letter-spacing:1px;">${levelTitle}</div>
-        <!-- Dots indicator -->
-        <div style="display:flex;gap:3px;justify-content:center;margin-bottom:10px;">${dots}</div>
-        <!-- Progress bar -->
-        <div class="prog-wrap">
-          <div class="prog-label">
-            <span style="font-size:7px;">${isMaxed?'MAX LEVEL!':'PRÓX LV'}</span>
-            <span style="font-size:7px;">${data.mins}/${isMaxed?'∞':nextLevelMins} min</span>
-          </div>
-          <div class="prog-bar"><div class="prog-fill" style="width:${isMaxed?100:pct}%;background:${color};"></div></div>
-        </div>
-        <!-- Stats row -->
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
-          <div style="text-align:center;">
-            <div style="font-size:9px;color:var(--cyan);">${data.sessions}</div>
-            <div style="font-size:7px;color:var(--muted);">MISSÕES</div>
-          </div>
-          <div style="text-align:center;">
-            <div style="font-size:9px;color:${color};">${fmtH(data.mins)}</div>
-            <div style="font-size:7px;color:var(--muted);">TEMPO</div>
-          </div>
-          <div style="text-align:center;">
-            <div style="font-size:7px;color:${diffColor};">${topDiff?topDiff.substring(0,4).toUpperCase():'—'}</div>
-            <div style="font-size:7px;color:var(--muted);">DIFIC.</div>
+          <div style="text-align:center;flex-shrink:0;min-width:36px;">
+            <div style="font-size:22px;color:${levelColor};text-shadow:0 0 10px ${levelColor};font-family:'Press Start 2P',monospace;line-height:1;">${level}</div>
+            <div style="font-size:7px;color:${levelColor};letter-spacing:1px;margin-top:2px;">LV</div>
           </div>
         </div>
-        <!-- Most common type -->
-        ${mostType!=='—'?`<div style="margin-top:8px;font-size:8px;color:var(--muted);text-align:center;">TIPO FAVORITO: <span style="color:var(--gold);">${mostType.toUpperCase()}</span></div>`:''}
-        ${data.sessions===0?`<div style="position:absolute;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;font-size:6px;color:var(--muted);">SEM DADOS</div>`:''}
+
+        <!-- LEVEL TITLE badge -->
+        <div style="text-align:center;font-size:8px;color:${levelColor};border:1px solid ${levelColor}44;background:${levelColor}11;padding:5px 12px;margin-bottom:12px;letter-spacing:2px;">${levelTitle}</div>
+
+        <!-- DOTS indicator (10 dots = 20 levels, 1 dot per 2 levels) -->
+        <div style="display:flex;gap:5px;justify-content:center;margin-bottom:14px;">${dots}</div>
+
+        <!-- PROGRESS to next level -->
+        <div class="prog-wrap" style="margin-bottom:14px;">
+          <div class="prog-label" style="margin-bottom:5px;">
+            <span style="font-size:8px;color:var(--muted);">${isMaxed?'✦ MAX LEVEL':'PRÓX NÍVEL'}</span>
+            <span style="font-size:8px;color:var(--muted);">${data.mins}/${isMaxed?'∞':nextLevelMins} min</span>
+          </div>
+          <div class="prog-bar" style="height:8px;">
+            <div class="prog-fill" style="width:${isMaxed?100:pct}%;background:${color};box-shadow:0 0 6px ${color};"></div>
+          </div>
+        </div>
+
+        <!-- STATS row: 3 columns -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding-top:12px;border-top:1px solid var(--border);">
+          <div style="text-align:center;">
+            <div style="font-size:13px;color:var(--cyan);line-height:1.2;">${data.sessions}</div>
+            <div style="font-size:7px;color:var(--muted);margin-top:3px;letter-spacing:1px;">MISSÕES</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:13px;color:${color};line-height:1.2;">${fmtH(data.mins)}</div>
+            <div style="font-size:7px;color:var(--muted);margin-top:3px;letter-spacing:1px;">TEMPO</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size:10px;color:${diffColor};line-height:1.2;">${topDiff?topDiff.substring(0,5).toUpperCase():'—'}</div>
+            <div style="font-size:7px;color:var(--muted);margin-top:3px;letter-spacing:1px;">DIFIC.</div>
+          </div>
+        </div>
+
+        <!-- TIPO FAVORITO -->
+        ${mostType!=='—'?`<div style="margin-top:10px;font-size:8px;color:var(--muted);text-align:center;letter-spacing:1px;">TIPO: <span style="color:var(--gold);">${mostType.toUpperCase()}</span></div>`:''}
+
+        <!-- OVERLAY se sem dados -->
+        ${!hasData?`<div style="position:absolute;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;">
+          <div style="font-size:8px;color:var(--dim);letter-spacing:2px;text-align:center;">SEM SESSÕES<br>AINDA</div>
+        </div>`:''}
       </div>`;
     });
   });
