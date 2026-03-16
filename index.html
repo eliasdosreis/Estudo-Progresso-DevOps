@@ -2560,654 +2560,980 @@ const BADGES_DEF = [
 // ══════════════════════════════════════════════════════════════════
 
 const BLUEPRINTS = [
+  // ════════════════════════ LINUX ════════════════════════
   {
-    id: 'linux',
-    name: 'Linux',
-    icon: '🐧',
-    color: '#ffcc00',
-    desc: 'Fundamentos e administração Linux',
+    id: 'linux', name: 'Linux', icon: '🐧', color: '#ffcc00',
+    desc: 'Fundamentos, administração e performance Linux',
     sections: [
       {
         title: '🖥 FUNDAMENTOS',
         items: [
-          { id:'lx_what',    text: 'O que é Linux? História e distribuições'              },
-          { id:'lx_install', text: 'Instalar uma distro (Ubuntu/CentOS/Debian)'           },
-          { id:'lx_fs',      text: 'Hierarquia de diretórios (FHS): /, /etc, /var, /usr'  },
-          { id:'lx_nav',     text: 'Navegação: cd, ls, pwd, find, locate'                 },
-          { id:'lx_perms',   text: 'Permissões: chmod, chown, chgrp, umask'               },
-          { id:'lx_users',   text: 'Usuários e grupos: useradd, usermod, passwd'           },
-          { id:'lx_pkg',     text: 'Gerenciadores de pacotes: apt, yum/dnf, rpm'          },
+          { id:'lx_what',    text: 'O que é Linux? História, kernel e distribuições'          },
+          { id:'lx_install', text: 'Instalar Ubuntu/Debian/CentOS e particionamento básico'   },
+          { id:'lx_fs',      text: 'Hierarquia FHS: /, /etc, /var, /usr, /proc, /sys'        },
+          { id:'lx_nav',     text: 'Navegação: cd, ls, pwd, find, locate, tree'              },
+          { id:'lx_perms',   text: 'Permissões: chmod (octal/simbólico), chown, chgrp, umask' },
+          { id:'lx_users',   text: 'Usuários e grupos: useradd, usermod, passwd, /etc/passwd' },
+          { id:'lx_pkg',     text: 'Gerenciadores: apt, yum/dnf, rpm, snap, flatpak'         },
+          { id:'lx_vim',     text: 'Editores: vi/vim básico, nano — modos insert/command'    },
         ]
       },
       {
         title: '⚙ PROCESSOS & SERVIÇOS',
         items: [
-          { id:'lx_proc',    text: 'Processos: ps, top, htop, kill, jobs, bg, fg'         },
-          { id:'lx_sysd',    text: 'Systemd: systemctl start/stop/enable/status'          },
-          { id:'lx_cron',    text: 'Agendamento: cron, crontab -e, at'                    },
-          { id:'lx_log',     text: 'Logs: journalctl, /var/log, logrotate'                },
-          { id:'lx_perf',    text: 'Performance: vmstat, iostat, sar, free'               },
+          { id:'lx_proc',    text: 'Processos: ps, top, htop, kill, pkill, nice, jobs'      },
+          { id:'lx_sysd',    text: 'Systemd: systemctl start/stop/enable/status/mask'        },
+          { id:'lx_unit',    text: 'Criar unit files: service, timer, target'                },
+          { id:'lx_cron',    text: 'Agendamento: cron, crontab -e, anacron, at'             },
+          { id:'lx_log',     text: 'Logs: journalctl -xe, /var/log, logrotate'              },
+          { id:'lx_perf',    text: 'Performance: vmstat, iostat, sar, free -h, df, du'      },
         ]
       },
       {
         title: '🌐 REDE',
         items: [
-          { id:'lx_net',     text: 'Rede: ip, ifconfig, netstat, ss, ping, traceroute'    },
-          { id:'lx_ssh',     text: 'SSH: chaves RSA, config, scp, sftp, tunelamento'      },
-          { id:'lx_fw',      text: 'Firewall: iptables, ufw, firewalld'                   },
-          { id:'lx_dns',     text: 'DNS: /etc/hosts, /etc/resolv.conf, dig, nslookup'     },
+          { id:'lx_net',     text: 'Rede: ip addr/route/link, ss, netstat, ping, mtr'       },
+          { id:'lx_ssh',     text: 'SSH: chaves RSA/ED25519, ssh-copy-id, config, tunelamento'},
+          { id:'lx_fw',      text: 'Firewall: iptables (chains/rules), ufw, firewalld'      },
+          { id:'lx_dns',     text: 'DNS: /etc/hosts, /etc/resolv.conf, dig, nslookup, resolvectl'},
+          { id:'lx_tc',      text: 'Traffic control: tc, iproute2, QoS básico'              },
         ]
       },
       {
         title: '💻 SHELL SCRIPTING',
         items: [
-          { id:'lx_bash',    text: 'Bash básico: variáveis, if/else, loops for/while'     },
-          { id:'lx_pipe',    text: 'Pipes e redirecionamento: |, >, >>, <, 2>&1'          },
-          { id:'lx_sed',     text: 'Manipulação de texto: sed, awk, grep, cut, sort'      },
-          { id:'lx_script',  text: 'Criar scripts: shebang, chmod +x, $?, $#, $@'         },
-          { id:'lx_func',    text: 'Funções, arrays e substituição de processo'            },
+          { id:'lx_bash',    text: 'Bash: variáveis, if/else/case, loops for/while/until'   },
+          { id:'lx_pipe',    text: 'Pipes e redirecionamento: |, >, >>, <, 2>&1, tee'       },
+          { id:'lx_sed',     text: 'Manipulação de texto: sed, awk, grep, cut, sort, uniq'  },
+          { id:'lx_script',  text: 'Scripts: shebang, chmod +x, $?, $#, $@, $0, set -euo'  },
+          { id:'lx_func',    text: 'Funções, arrays, mapfile e substituição de processo'     },
+          { id:'lx_debug',   text: 'Debug: set -x, bash -n, shellcheck, trap ERR'           },
         ]
       },
       {
-        title: '🔒 SEGURANÇA',
+        title: '🔒 SEGURANÇA BASE',
         items: [
-          { id:'lx_sec1',    text: 'Hardening: desabilitar serviços, sudo, sudoers'       },
-          { id:'lx_sec2',    text: 'SELinux / AppArmor: modos enforcing, permissive'       },
-          { id:'lx_sec3',    text: 'Auditoria: auditd, ausearch'                          },
-        ]
-      }
-    ]
-  },
-
-  {
-    id: 'docker',
-    name: 'Docker',
-    icon: '🐳',
-    color: '#2496ed',
-    desc: 'Containerização com Docker',
-    sections: [
-      {
-        title: '📦 FUNDAMENTOS',
-        items: [
-          { id:'dk_what',    text: 'O que são containers? VMs vs Containers'              },
-          { id:'dk_install', text: 'Instalar Docker Engine e Docker Desktop'               },
-          { id:'dk_run',     text: 'docker run, pull, ps, stop, rm, images'               },
-          { id:'dk_arch',    text: 'Arquitetura: daemon, client, registry, image, container'},
-          { id:'dk_layer',   text: 'Layers de imagem e Union Filesystem'                  },
+          { id:'lx_sec1',    text: 'Hardening: desabilitar root SSH, sudo/sudoers, sshd_config'},
+          { id:'lx_sec2',    text: 'SELinux: modos enforcing/permissive, contexts, audit2allow'},
+          { id:'lx_sec3',    text: 'AppArmor: profiles, aa-genprof, complain mode'           },
+          { id:'lx_sec4',    text: 'Auditoria: auditd, ausearch, aureport, auditctl'        },
+          { id:'lx_sec5',    text: 'Fail2ban: banir IPs maliciosos, jails, filtros'          },
         ]
       },
       {
-        title: '📝 DOCKERFILE',
+        title: '🔧 INTERMEDIÁRIO',
         items: [
-          { id:'dk_from',    text: 'Instruções: FROM, RUN, COPY, ADD, ENV, ARG'           },
-          { id:'dk_cmd',     text: 'CMD vs ENTRYPOINT: diferenças e usos'                 },
-          { id:'dk_expose',  text: 'EXPOSE, WORKDIR, USER, HEALTHCHECK'                   },
-          { id:'dk_multi',   text: 'Multi-stage builds para imagens menores'              },
-          { id:'dk_best',    text: 'Boas práticas: .dockerignore, camadas mínimas'         },
-        ]
-      },
-      {
-        title: '🌐 REDE & VOLUMES',
-        items: [
-          { id:'dk_vol',     text: 'Volumes: docker volume create, mount, bind mount'     },
-          { id:'dk_net',     text: 'Redes: bridge, host, none, overlay'                   },
-          { id:'dk_port',    text: 'Port mapping: -p 8080:80, --network'                  },
-        ]
-      },
-      {
-        title: '🔧 DOCKER COMPOSE',
-        items: [
-          { id:'dk_comp1',   text: 'Estrutura do docker-compose.yml'                      },
-          { id:'dk_comp2',   text: 'Services, networks, volumes no Compose'               },
-          { id:'dk_comp3',   text: 'docker compose up/down/logs/exec/scale'               },
-          { id:'dk_comp4',   text: 'Depends_on, healthcheck, restart policies'            },
-          { id:'dk_comp5',   text: 'Environment files (.env) e override'                  },
-        ]
-      },
-      {
-        title: '🔐 SEGURANÇA',
-        items: [
-          { id:'dk_sec1',    text: 'Rodar container sem root: USER no Dockerfile'         },
-          { id:'dk_sec2',    text: 'Scan de imagens: docker scout, trivy'                 },
-          { id:'dk_sec3',    text: 'Capabilities, seccomp e AppArmor em containers'       },
-        ]
-      }
-    ]
-  },
-
-  {
-    id: 'kubernetes',
-    name: 'Kubernetes',
-    icon: '⎈',
-    color: '#326ce5',
-    desc: 'Orquestração de containers com K8s',
-    sections: [
-      {
-        title: '🏗 ARQUITETURA',
-        items: [
-          { id:'k8_what',    text: 'O que é Kubernetes? Por que usar?'                    },
-          { id:'k8_arch',    text: 'Componentes: control plane, worker nodes'             },
-          { id:'k8_api',     text: 'API Server, etcd, Scheduler, Controller Manager'      },
-          { id:'k8_kubelet', text: 'Kubelet, kube-proxy, Container Runtime'               },
-          { id:'k8_kubectl', text: 'kubectl: config, context, apply, get, describe'       },
-        ]
-      },
-      {
-        title: '⚙ WORKLOADS',
-        items: [
-          { id:'k8_pod',     text: 'Pod: menor unidade, multi-container, sidecars'        },
-          { id:'k8_rep',     text: 'ReplicaSet: garantir replicas de pods'                },
-          { id:'k8_dep',     text: 'Deployment: rolling update, rollback, estratégias'    },
-          { id:'k8_sts',     text: 'StatefulSet: aplicações com estado (DBs)'             },
-          { id:'k8_ds',      text: 'DaemonSet: um pod por node (logs, monitoring)'        },
-          { id:'k8_job',     text: 'Job e CronJob: tasks e agendamentos'                  },
-        ]
-      },
-      {
-        title: '🌐 REDE & SERVIÇOS',
-        items: [
-          { id:'k8_svc',     text: 'Service: ClusterIP, NodePort, LoadBalancer'           },
-          { id:'k8_ing',     text: 'Ingress: roteamento HTTP, TLS, regras por path'       },
-          { id:'k8_dns',     text: 'CoreDNS: service discovery dentro do cluster'         },
-          { id:'k8_np',      text: 'NetworkPolicy: isolamento entre pods e namespaces'    },
-        ]
-      },
-      {
-        title: '💾 CONFIG & STORAGE',
-        items: [
-          { id:'k8_cm',      text: 'ConfigMap: configurações externas ao container'       },
-          { id:'k8_sec',     text: 'Secret: dados sensíveis (base64, RBAC)'               },
-          { id:'k8_pv',      text: 'PersistentVolume e PersistentVolumeClaim'             },
-          { id:'k8_sc',      text: 'StorageClass: provisionamento dinâmico'               },
-          { id:'k8_env',     text: 'envFrom, volumeMounts, subPath'                       },
-        ]
-      },
-      {
-        title: '🔒 SEGURANÇA & RBAC',
-        items: [
-          { id:'k8_rbac',    text: 'RBAC: Role, ClusterRole, RoleBinding'                 },
-          { id:'k8_sa',      text: 'ServiceAccount: identidade dos pods'                  },
-          { id:'k8_psp',     text: 'PodSecurity Admission (PSS/PSA)'                      },
-          { id:'k8_ns',      text: 'Namespaces: isolamento lógico de recursos'            },
-        ]
-      },
-      {
-        title: '🔧 OPERAÇÕES',
-        items: [
-          { id:'k8_hpa',     text: 'HorizontalPodAutoscaler: scale baseado em CPU/RAM'   },
-          { id:'k8_vpa',     text: 'VerticalPodAutoscaler e Cluster Autoscaler'          },
-          { id:'k8_helm',    text: 'Helm: charts, values.yaml, release, upgrade'          },
-          { id:'k8_probe',   text: 'Liveness, Readiness, Startup probes'                  },
-          { id:'k8_res',     text: 'Resources: requests, limits, QoS classes'             },
-          { id:'k8_debug',   text: 'Debug: kubectl exec, logs, port-forward, events'      },
-        ]
-      }
-    ]
-  },
-
-  {
-    id: 'terraform',
-    name: 'Terraform',
-    icon: '🔷',
-    color: '#7b42bc',
-    desc: 'Infrastructure as Code com Terraform',
-    sections: [
-      {
-        title: '🏗 FUNDAMENTOS',
-        items: [
-          { id:'tf_what',    text: 'O que é IaC? Por que Terraform?'                      },
-          { id:'tf_install', text: 'Instalar Terraform CLI e configurar provider'          },
-          { id:'tf_hcl',     text: 'Sintaxe HCL: blocos, atributos, tipos'               },
-          { id:'tf_flow',    text: 'Fluxo: terraform init, plan, apply, destroy'          },
-          { id:'tf_state',   text: 'State file: o que é, por que existe, problemas'       },
-        ]
-      },
-      {
-        title: '⚙ BLOCOS PRINCIPAIS',
-        items: [
-          { id:'tf_res',     text: 'resource: criar e gerenciar infraestrutura'           },
-          { id:'tf_var',     text: 'variable: inputs, defaults, tipos, validações'        },
-          { id:'tf_out',     text: 'output: exportar valores entre módulos'               },
-          { id:'tf_data',    text: 'data source: consultar recursos existentes'            },
-          { id:'tf_local',   text: 'locals: valores calculados reutilizáveis'             },
-          { id:'tf_prov',    text: 'provider: AWS, Azure, GCP, Kubernetes'                },
-        ]
-      },
-      {
-        title: '🔧 MÓDULOS',
-        items: [
-          { id:'tf_mod1',    text: 'Criar módulos reutilizáveis'                          },
-          { id:'tf_mod2',    text: 'Terraform Registry: módulos da comunidade'            },
-          { id:'tf_mod3',    text: 'Versioning de módulos e providers'                    },
-          { id:'tf_mod4',    text: 'Estrutura de projeto: módulos, envs, workspace'       },
-        ]
-      },
-      {
-        title: '☁ STATE REMOTO',
-        items: [
-          { id:'tf_back',    text: 'Backend remoto: S3, Azure Blob, GCS, Terraform Cloud' },
-          { id:'tf_lock',    text: 'State locking: DynamoDB, evitar race conditions'      },
-          { id:'tf_work',    text: 'Workspaces: múltiplos ambientes (dev/stg/prod)'       },
-          { id:'tf_import',  text: 'terraform import: importar recursos existentes'        },
+          { id:'lx_int1',    text: 'LVM: physical volumes, volume groups, logical volumes'   },
+          { id:'lx_int2',    text: 'Filesystems: ext4, xfs, btrfs — mkfs, mount, fstab'    },
+          { id:'lx_int3',    text: 'RAID software: mdadm, níveis 0, 1, 5, 10'              },
+          { id:'lx_int4',    text: 'Namespaces e cgroups: base de containers Linux'          },
+          { id:'lx_int5',    text: 'Kernel tuning: sysctl, /proc/sys, hugepages, swappiness'},
+          { id:'lx_int6',    text: 'Certificados TLS: openssl, cfssl, mkcert, PKCS'        },
+          { id:'lx_int7',    text: 'NFS / SMB / iSCSI: storage de rede'                     },
         ]
       },
       {
         title: '🚀 AVANÇADO',
         items: [
-          { id:'tf_adv1',    text: 'for_each e count: recursos dinâmicos'                 },
-          { id:'tf_adv2',    text: 'dynamic blocks e condicionais'                        },
-          { id:'tf_adv3',    text: 'Terraform Cloud/Enterprise: runs remotos'             },
-          { id:'tf_adv4',    text: 'Sentinel: policy as code'                             },
-          { id:'tf_adv5',    text: 'Integração com CI/CD pipelines'                       },
+          { id:'lx_adv1',    text: 'eBPF / BCC / bpftrace: observabilidade no kernel'       },
+          { id:'lx_adv2',    text: 'perf, strace, ltrace, lsof: profiling e tracing'        },
+          { id:'lx_adv3',    text: 'Linux performance tuning: CPU governor, NUMA, IRQ aff.' },
+          { id:'lx_adv4',    text: 'Systemd avançado: socket activation, D-Bus, sandboxing' },
+          { id:'lx_adv5',    text: 'Custom initramfs, bootloader: GRUB2, kernel params'      },
+          { id:'lx_adv6',    text: 'Containers low-level: runc, containerd, buildkit'        },
+          { id:'lx_adv7',    text: 'PAM: módulos de autenticação, LDAP/AD integration'       },
         ]
       }
     ]
   },
 
+  // ════════════════════════ DOCKER ════════════════════════
   {
-    id: 'aws',
-    name: 'AWS',
-    icon: '☁',
-    color: '#ff9900',
-    desc: 'Amazon Web Services — do zero ao arquiteto',
+    id: 'docker', name: 'Docker', icon: '🐳', color: '#2496ed',
+    desc: 'Containerização do básico ao avançado',
+    sections: [
+      {
+        title: '📦 FUNDAMENTOS',
+        items: [
+          { id:'dk_what',    text: 'VMs vs Containers: isolamento, overhead, use cases'     },
+          { id:'dk_install', text: 'Docker Engine, Docker Desktop, rootless Docker'          },
+          { id:'dk_run',     text: 'docker run, pull, ps, stop, rm, images, inspect'        },
+          { id:'dk_arch',    text: 'Arquitetura: daemon, client, registry, image, container' },
+          { id:'dk_layer',   text: 'Union FS: layers de imagem, copy-on-write'              },
+          { id:'dk_reg',     text: 'Registries: Docker Hub, ECR, GCR, ACR, self-hosted'    },
+        ]
+      },
+      {
+        title: '📝 DOCKERFILE',
+        items: [
+          { id:'dk_from',    text: 'FROM, RUN, COPY, ADD, ENV, ARG, LABEL'                  },
+          { id:'dk_cmd',     text: 'CMD vs ENTRYPOINT: exec vs shell form, override'        },
+          { id:'dk_expose',  text: 'EXPOSE, WORKDIR, USER, HEALTHCHECK, ONBUILD'            },
+          { id:'dk_multi',   text: 'Multi-stage builds: builder pattern, imagens menores'    },
+          { id:'dk_best',    text: 'Boas práticas: .dockerignore, camadas, cache ordering'  },
+          { id:'dk_distro',  text: 'Base images: alpine, distroless, scratch, debian-slim'  },
+        ]
+      },
+      {
+        title: '🌐 REDE & VOLUMES',
+        items: [
+          { id:'dk_vol',     text: 'Volumes: docker volume create, named, bind, tmpfs'      },
+          { id:'dk_net',     text: 'Redes: bridge, host, none, overlay, macvlan'            },
+          { id:'dk_port',    text: 'Port mapping: -p, --publish-all, --network host'        },
+          { id:'dk_dns',     text: 'DNS interno: service discovery por nome no bridge'       },
+        ]
+      },
+      {
+        title: '🔧 DOCKER COMPOSE',
+        items: [
+          { id:'dk_comp1',   text: 'Estrutura do compose.yml: version, services, networks'  },
+          { id:'dk_comp2',   text: 'Services, networks, volumes, configs, secrets'          },
+          { id:'dk_comp3',   text: 'docker compose up/down/logs/exec/scale/pull/push'       },
+          { id:'dk_comp4',   text: 'depends_on, healthcheck, restart: always/on-failure'    },
+          { id:'dk_comp5',   text: '.env files, compose.override.yml, profiles'              },
+          { id:'dk_comp6',   text: 'Compose Watch: live reload para desenvolvimento'         },
+        ]
+      },
+      {
+        title: '🔧 INTERMEDIÁRIO',
+        items: [
+          { id:'dk_int1',    text: 'BuildKit: --mount=type=cache, --secret, parallelismo'   },
+          { id:'dk_int2',    text: 'Multi-platform builds: docker buildx, QEMU, manifests'  },
+          { id:'dk_int3',    text: 'Docker Swarm: services, stacks, overlay networks'        },
+          { id:'dk_int4',    text: 'Resource limits: --memory, --cpus, --blkio-weight'      },
+          { id:'dk_int5',    text: 'Log drivers: json-file, syslog, fluentd, gelf'          },
+          { id:'dk_int6',    text: 'Container lifecycle hooks: postStart, preStop'           },
+        ]
+      },
+      {
+        title: '🔐 SEGURANÇA',
+        items: [
+          { id:'dk_sec1',    text: 'Rodar sem root: USER, --user, userns-remap'             },
+          { id:'dk_sec2',    text: 'Scan de imagens: docker scout, trivy, grype, snyk'      },
+          { id:'dk_sec3',    text: 'Capabilities, seccomp profiles, AppArmor/SELinux'        },
+          { id:'dk_sec4',    text: 'Read-only containers: --read-only, tmpfs mounts'        },
+          { id:'dk_sec5',    text: 'Supply chain: SBOM, cosign, sigstore, image signing'    },
+        ]
+      },
+      {
+        title: '🚀 AVANÇADO',
+        items: [
+          { id:'dk_adv1',    text: 'containerd direto: ctr, nerdctl, crictl'                },
+          { id:'dk_adv2',    text: 'OCI spec: image spec, runtime spec, distribution spec'  },
+          { id:'dk_adv3',    text: 'Plugins Docker: volume, network, authorization'          },
+          { id:'dk_adv4',    text: 'Docker in CI/CD: DinD vs DooD vs Kaniko vs Buildah'    },
+          { id:'dk_adv5',    text: 'Image layer analysis: dive, skopeo, crane'              },
+        ]
+      }
+    ]
+  },
+
+  // ════════════════════════ KUBERNETES ════════════════════════
+  {
+    id: 'kubernetes', name: 'Kubernetes', icon: '⎈', color: '#326ce5',
+    desc: 'Orquestração de containers do básico ao CKA/CKAD',
+    sections: [
+      {
+        title: '🏗 ARQUITETURA',
+        items: [
+          { id:'k8_what',    text: 'O que é Kubernetes? Por que usar? História'             },
+          { id:'k8_arch',    text: 'Control plane: API Server, etcd, Scheduler, CM'         },
+          { id:'k8_node',    text: 'Workers: kubelet, kube-proxy, container runtime'         },
+          { id:'k8_kubectl', text: 'kubectl: config, context, apply, get, describe, explain' },
+          { id:'k8_ns',      text: 'Namespaces: default, kube-system, isolamento lógico'    },
+          { id:'k8_api',     text: 'API resources: apiVersion, kind, metadata, spec, status' },
+        ]
+      },
+      {
+        title: '⚙ WORKLOADS',
+        items: [
+          { id:'k8_pod',     text: 'Pod: spec, multi-container, init containers, sidecars'  },
+          { id:'k8_rep',     text: 'ReplicaSet: selector, replicas, pod template'           },
+          { id:'k8_dep',     text: 'Deployment: rolling update, recreate, rollback, pause'  },
+          { id:'k8_sts',     text: 'StatefulSet: stable identity, ordered deploy, headless' },
+          { id:'k8_ds',      text: 'DaemonSet: node selector, tolerations, logging agent'   },
+          { id:'k8_job',     text: 'Job: completions, parallelism, backoffLimit'             },
+          { id:'k8_cjob',    text: 'CronJob: schedule, concurrencyPolicy, historyLimit'     },
+        ]
+      },
+      {
+        title: '🌐 REDE & SERVIÇOS',
+        items: [
+          { id:'k8_svc',     text: 'Service: ClusterIP, NodePort, LoadBalancer, ExternalName'},
+          { id:'k8_ing',     text: 'Ingress: rules, paths, TLS, rewrite, annotations'       },
+          { id:'k8_ingressc',text: 'IngressClass: nginx, traefik, aws-alb, kong'             },
+          { id:'k8_dns',     text: 'CoreDNS: service discovery, FQDN, ndots, resolv.conf'   },
+          { id:'k8_np',      text: 'NetworkPolicy: ingress/egress, podSelector, namespace'  },
+          { id:'k8_gw',      text: 'Gateway API: HTTPRoute, GRPCRoute (novo padrão)'        },
+        ]
+      },
+      {
+        title: '💾 CONFIG & STORAGE',
+        items: [
+          { id:'k8_cm',      text: 'ConfigMap: fromLiteral, fromFile, env, volume mount'    },
+          { id:'k8_sec',     text: 'Secret: tipos, base64, envFrom, external-secrets-operator'},
+          { id:'k8_pv',      text: 'PersistentVolume e PersistentVolumeClaim: accessModes'  },
+          { id:'k8_sc',      text: 'StorageClass: provisioner, reclaimPolicy, WaitForFirst' },
+          { id:'k8_csi',     text: 'CSI: drivers (EBS, EFS, NFS, Ceph), volume snapshots'  },
+          { id:'k8_env',     text: 'envFrom, valueFrom fieldRef, resourceFieldRef, subPath' },
+        ]
+      },
+      {
+        title: '🔒 SEGURANÇA & RBAC',
+        items: [
+          { id:'k8_rbac',    text: 'RBAC: Role, ClusterRole, RoleBinding, ClusterRoleBinding'},
+          { id:'k8_sa',      text: 'ServiceAccount: IRSA, Workload Identity, token projection'},
+          { id:'k8_psa',     text: 'PodSecurity Admission: baseline, restricted, privileged' },
+          { id:'k8_opa',     text: 'OPA Gatekeeper / Kyverno: policy enforcement'            },
+          { id:'k8_sec_ctx', text: 'SecurityContext: runAsUser, fsGroup, capabilities, SELinux'},
+          { id:'k8_netpol',  text: 'Calico/Cilium: eBPF networking, NetworkPolicy avançada'  },
+        ]
+      },
+      {
+        title: '🔧 OPERAÇÕES & SCALING',
+        items: [
+          { id:'k8_hpa',     text: 'HPA: CPU/memory, custom metrics (KEDA), behavior'       },
+          { id:'k8_vpa',     text: 'VPA: updateMode, container recommendations'              },
+          { id:'k8_ca',      text: 'Cluster Autoscaler e Karpenter: node provisioning'      },
+          { id:'k8_probe',   text: 'Liveness, Readiness, Startup probes: HTTP/TCP/exec'     },
+          { id:'k8_res',     text: 'Resources: requests, limits, LimitRange, QoS classes'   },
+          { id:'k8_pdb',     text: 'PodDisruptionBudget: disponibilidade durante updates'    },
+          { id:'k8_debug',   text: 'Debug: kubectl exec, logs, port-forward, ephemeral pods' },
+        ]
+      },
+      {
+        title: '⛵ HELM & PACOTES',
+        items: [
+          { id:'k8_helm',    text: 'Helm: charts, values.yaml, templates, release, upgrade' },
+          { id:'k8_helm2',   text: 'Helm: hooks, tests, library charts, chart dependencies' },
+          { id:'k8_kust',    text: 'Kustomize: bases, overlays, patches, transformers'       },
+          { id:'k8_flux',    text: 'FluxCD: source, kustomization, helm release, GitOps'    },
+        ]
+      },
+      {
+        title: '🚀 AVANÇADO',
+        items: [
+          { id:'k8_adv1',    text: 'Custom Resources: CRD, CR, Operator pattern'             },
+          { id:'k8_adv2',    text: 'Operator SDK / Kubebuilder: controller-runtime'          },
+          { id:'k8_adv3',    text: 'etcd: backup, restore, compaction, disaster recovery'    },
+          { id:'k8_adv4',    text: 'Multi-cluster: kubefed, Cluster API, submariner'          },
+          { id:'k8_adv5',    text: 'Service Mesh: Istio (VirtualService, DestinationRule)'   },
+          { id:'k8_adv6',    text: 'Cilium: eBPF, Hubble, BGP, ClusterMesh'                 },
+          { id:'k8_adv7',    text: 'K8s performance: etcd tuning, API server flags, audit'   },
+        ]
+      }
+    ]
+  },
+
+  // ════════════════════════ TERRAFORM ════════════════════════
+  {
+    id: 'terraform', name: 'Terraform', icon: '🔷', color: '#7b42bc',
+    desc: 'IaC com Terraform — do init ao Sentinel',
+    sections: [
+      {
+        title: '🏗 FUNDAMENTOS',
+        items: [
+          { id:'tf_what',    text: 'O que é IaC? Terraform vs CloudFormation vs Pulumi'     },
+          { id:'tf_install', text: 'Instalar Terraform CLI, tfenv, opentofu'                 },
+          { id:'tf_hcl',     text: 'Sintaxe HCL: blocos, atributos, tipos, expressões'      },
+          { id:'tf_flow',    text: 'Fluxo: init, validate, plan, apply, destroy, refresh'   },
+          { id:'tf_state',   text: 'State file: o que é, terraform.tfstate, sensibilidade'  },
+        ]
+      },
+      {
+        title: '⚙ BLOCOS PRINCIPAIS',
+        items: [
+          { id:'tf_res',     text: 'resource: lifecycle meta-arguments, depends_on'          },
+          { id:'tf_var',     text: 'variable: type, default, validation, sensitive, nullable'},
+          { id:'tf_out',     text: 'output: value, description, sensitive, precondition'     },
+          { id:'tf_data',    text: 'data source: read-only lookups de recursos existentes'   },
+          { id:'tf_local',   text: 'locals: valores calculados, merge, flatten, toset'       },
+          { id:'tf_prov',    text: 'provider: version constraints, alias, assume_role'       },
+        ]
+      },
+      {
+        title: '🔧 MÓDULOS',
+        items: [
+          { id:'tf_mod1',    text: 'Criar módulos: inputs, outputs, estrutura de diretórios' },
+          { id:'tf_mod2',    text: 'Terraform Registry: módulos oficiais AWS/GCP/Azure'      },
+          { id:'tf_mod3',    text: 'Versioning de módulos: source com git ref e tag'         },
+          { id:'tf_mod4',    text: 'Estrutura monorepo: modules/, environments/, shared/'    },
+        ]
+      },
+      {
+        title: '☁ STATE REMOTO',
+        items: [
+          { id:'tf_back',    text: 'Backend: S3+DynamoDB, Azure Blob, GCS, Terraform Cloud'  },
+          { id:'tf_lock',    text: 'State locking: evitar race conditions em equipe'          },
+          { id:'tf_work',    text: 'Workspaces: terraform.workspace, múltiplos ambientes'    },
+          { id:'tf_import',  text: 'terraform import, terraform state mv/rm/show/pull/push'  },
+        ]
+      },
+      {
+        title: '🔧 INTERMEDIÁRIO',
+        items: [
+          { id:'tf_int1',    text: 'for_each com maps e sets: recursos dinâmicos'            },
+          { id:'tf_int2',    text: 'count vs for_each: quando usar cada um'                  },
+          { id:'tf_int3',    text: 'dynamic blocks: criar blocos aninhados dinamicamente'    },
+          { id:'tf_int4',    text: 'Funções built-in: lookup, merge, flatten, coalesce, try' },
+          { id:'tf_int5',    text: 'templatefile, file, jsonencode, yamldecode'              },
+          { id:'tf_int6',    text: 'moved block: refatorar sem recriar recursos'             },
+          { id:'tf_int7',    text: 'Preconditions e postconditions: validação de contratos'  },
+        ]
+      },
+      {
+        title: '🚀 AVANÇADO',
+        items: [
+          { id:'tf_adv1',    text: 'Terraform Cloud/Enterprise: runs remotos, VCS, SSO'      },
+          { id:'tf_adv2',    text: 'Sentinel: policy as code, imports, mock, enforcement'    },
+          { id:'tf_adv3',    text: 'CDK for Terraform (CDKTF): Python/TypeScript'            },
+          { id:'tf_adv4',    text: 'Provider development: Go SDK, schema, CRUD'              },
+          { id:'tf_adv5',    text: 'Terragrunt: DRY configs, run-all, dependency graph'      },
+          { id:'tf_adv6',    text: 'CI/CD: Atlantis, Spacelift, env0, tf-controller (Flux)'  },
+          { id:'tf_adv7',    text: 'Testing: terraform test (HCL), Terratest (Go), tfmock'  },
+          { id:'tf_adv8',    text: 'OpenTofu: fork open source, diferenças e migração'       },
+        ]
+      }
+    ]
+  },
+
+  // ════════════════════════ AWS ════════════════════════
+  {
+    id: 'aws', name: 'AWS', icon: '☁', color: '#ff9900',
+    desc: 'Amazon Web Services — do CLF ao Solutions Architect Pro',
     sections: [
       {
         title: '🌐 FUNDAMENTOS CLOUD',
         items: [
-          { id:'aw_cloud',   text: 'Cloud Computing: IaaS, PaaS, SaaS, modelos'          },
-          { id:'aw_global',  text: 'Regiões, Availability Zones, Edge Locations'          },
-          { id:'aw_console', text: 'AWS Console, CLI (aws configure), SDK'                },
-          { id:'aw_iam',     text: 'IAM: users, groups, roles, policies, MFA'            },
-          { id:'aw_billing', text: 'Free Tier, Cost Explorer, Billing Alerts'             },
+          { id:'aw_cloud',   text: 'Cloud: IaaS, PaaS, SaaS, shared responsibility model'   },
+          { id:'aw_global',  text: 'Global infra: Regions, AZs, Edge Locations, Local Zones' },
+          { id:'aw_console', text: 'Console, CLI (aws configure, profiles, sso), SDK'        },
+          { id:'aw_iam',     text: 'IAM: users, groups, roles, policies JSON, MFA, STS'     },
+          { id:'aw_billing', text: 'Cost Explorer, Budgets, Savings Plans, Reserved Instances'},
         ]
       },
       {
         title: '💻 COMPUTE',
         items: [
-          { id:'aw_ec2',     text: 'EC2: instance types, AMI, Security Groups, Key Pairs' },
-          { id:'aw_ec2b',    text: 'EC2 User Data, Instance Metadata, Storage EBS/EFS'    },
-          { id:'aw_asg',     text: 'Auto Scaling Groups: políticas, lifecycle hooks'       },
-          { id:'aw_elb',     text: 'Load Balancers: ALB, NLB, CLB — listeners, targets'  },
-          { id:'aw_lambda',  text: 'Lambda: funções serverless, triggers, layers'         },
-          { id:'aw_ecs',     text: 'ECS/EKS: containers gerenciados na AWS'               },
+          { id:'aw_ec2',     text: 'EC2: families (C/M/R/T/G), AMI, SG, Key Pairs, EBS'    },
+          { id:'aw_ec2b',    text: 'EC2 User Data, IMDSv2, instance store, placement groups' },
+          { id:'aw_asg',     text: 'Auto Scaling Groups: policies, lifecycle, warm pools'    },
+          { id:'aw_elb',     text: 'ALB (path/header routing), NLB (L4), GWLB targets'      },
+          { id:'aw_lambda',  text: 'Lambda: runtimes, triggers, layers, concurrency, URLs'   },
+          { id:'aw_ecs',     text: 'ECS: task definitions, services, Fargate vs EC2'        },
+          { id:'aw_eks',     text: 'EKS: managed nodes, Fargate, add-ons, IRSA'             },
         ]
       },
       {
         title: '🗄 ARMAZENAMENTO',
         items: [
-          { id:'aw_s3',      text: 'S3: buckets, objects, políticas, versionamento'       },
-          { id:'aw_s3b',     text: 'S3: lifecycle, classes (Standard, IA, Glacier)'       },
-          { id:'aw_ebs',     text: 'EBS: tipos (gp3, io2), snapshots, encryption'         },
-          { id:'aw_efs',     text: 'EFS: filesystem compartilhado NFS'                    },
-          { id:'aw_rds',     text: 'RDS: Multi-AZ, Read Replicas, backup'                 },
-          { id:'aw_ddb',     text: 'DynamoDB: NoSQL, partition key, streams, DAX'         },
+          { id:'aw_s3',      text: 'S3: buckets, objects, ACL, bucket policies, presigned URLs'},
+          { id:'aw_s3b',     text: 'S3: lifecycle rules, storage classes, Intelligent-Tiering' },
+          { id:'aw_s3c',     text: 'S3: replication (CRR/SRR), event notifications, CORS'    },
+          { id:'aw_ebs',     text: 'EBS: gp3, io2, sc1, st1 — snapshots, encryption, resize' },
+          { id:'aw_efs',     text: 'EFS: performance modes, throughput, access points, DP'   },
+          { id:'aw_rds',     text: 'RDS: Multi-AZ, Read Replicas, Parameter Groups, Proxy'   },
+          { id:'aw_ddb',     text: 'DynamoDB: tables, GSI/LSI, streams, DAX, on-demand'     },
+          { id:'aw_aurora',  text: 'Aurora: Serverless v2, Global Database, cloning'         },
         ]
       },
       {
         title: '🌐 REDE',
         items: [
-          { id:'aw_vpc',     text: 'VPC: subnets public/private, route tables'            },
-          { id:'aw_vpc2',    text: 'Internet Gateway, NAT Gateway, VPC Peering'           },
-          { id:'aw_sg',      text: 'Security Groups vs NACLs: stateful vs stateless'      },
-          { id:'aw_r53',     text: 'Route 53: hosted zones, routing policies'             },
-          { id:'aw_cf',      text: 'CloudFront: CDN, distributions, cache behaviors'      },
+          { id:'aw_vpc',     text: 'VPC: subnets public/private, route tables, CIDR blocks'  },
+          { id:'aw_vpc2',    text: 'IGW, NAT Gateway, VPC Peering, PrivateLink, Endpoints'  },
+          { id:'aw_sg',      text: 'Security Groups (stateful) vs NACLs (stateless)'         },
+          { id:'aw_r53',     text: 'Route 53: hosted zones, routing policies, health checks' },
+          { id:'aw_cf',      text: 'CloudFront: origins, behaviors, OAC, Lambda@Edge, HTTPS' },
+          { id:'aw_tgw',     text: 'Transit Gateway, Direct Connect, Site-to-Site VPN'       },
         ]
       },
       {
         title: '⚡ DEVOPS & IaC',
         items: [
-          { id:'aw_cf2',     text: 'CloudFormation: templates YAML/JSON, stacks'          },
-          { id:'aw_cdkk',    text: 'AWS CDK: IaC com código (Python/TypeScript)'         },
-          { id:'aw_pipe',    text: 'CodePipeline, CodeBuild, CodeDeploy'                  },
-          { id:'aw_ecr',     text: 'ECR: Docker registry privado na AWS'                  },
+          { id:'aw_cfn',     text: 'CloudFormation: templates, stacks, changesets, drift'    },
+          { id:'aw_cdk',     text: 'AWS CDK: constructs L1/L2/L3, cdk deploy, synth, diff'  },
+          { id:'aw_pipe',    text: 'CodePipeline + CodeBuild + CodeDeploy: ciclo completo'   },
+          { id:'aw_ecr',     text: 'ECR: lifecycle policies, image scanning, cross-account'  },
+          { id:'aw_ssm',     text: 'Systems Manager: Session Manager, Run Command, Patch'    },
         ]
       },
       {
         title: '🔒 SEGURANÇA',
         items: [
-          { id:'aw_sec1',    text: 'KMS: chaves de criptografia gerenciadas'              },
-          { id:'aw_sec2',    text: 'Secrets Manager e Parameter Store'                    },
-          { id:'aw_sec3',    text: 'CloudTrail: auditoria de chamadas de API'             },
-          { id:'aw_sec4',    text: 'GuardDuty, SecurityHub, Config, Trusted Advisor'      },
+          { id:'aw_sec1',    text: 'KMS: CMK, key policies, envelope encryption, grants'    },
+          { id:'aw_sec2',    text: 'Secrets Manager: rotation, versioning, cross-account'    },
+          { id:'aw_sec3',    text: 'CloudTrail: management/data events, Insights, S3 export' },
+          { id:'aw_sec4',    text: 'GuardDuty, SecurityHub, Inspector, Macie, Detective'     },
+          { id:'aw_sec5',    text: 'WAF v2: managed rules, rate limiting, Bot Control'       },
+          { id:'aw_sec6',    text: 'Organizations: SCPs, Control Tower, Resource Policies'   },
+        ]
+      },
+      {
+        title: '🔧 INTERMEDIÁRIO',
+        items: [
+          { id:'aw_int1',    text: 'SQS: standard vs FIFO, DLQ, visibility timeout, batching'},
+          { id:'aw_int2',    text: 'SNS: topics, filtering, fanout, FIFO topics'             },
+          { id:'aw_int3',    text: 'EventBridge: rules, event bus, archive, replay, pipes'   },
+          { id:'aw_int4',    text: 'Step Functions: state machines, Express vs Standard'     },
+          { id:'aw_int5',    text: 'API Gateway: REST vs HTTP vs WebSocket, Lambda proxy'    },
+          { id:'aw_int6',    text: 'ElastiCache: Redis vs Memcached, cluster mode, failover' },
+          { id:'aw_int7',    text: 'OpenSearch: domains, indices, ISM, fine-grained access'  },
+        ]
+      },
+      {
+        title: '🚀 AVANÇADO',
+        items: [
+          { id:'aw_adv1',    text: 'Landing Zone: multi-account strategy, OU hierarchy'      },
+          { id:'aw_adv2',    text: 'EKS avançado: Karpenter, IRSA, EKS anywhere, Bottlerocket'},
+          { id:'aw_adv3',    text: 'Observability: CloudWatch Logs Insights, EMF, X-Ray'    },
+          { id:'aw_adv4',    text: 'Data: Glue, Athena, Lake Formation, Redshift Serverless' },
+          { id:'aw_adv5',    text: 'FinOps: Spot, Savings Plans, Cost Allocation Tags'       },
+          { id:'aw_adv6',    text: 'Disaster Recovery: RTO/RPO, pilot light, warm standby'  },
         ]
       }
     ]
   },
 
+  // ════════════════════════ AZURE ════════════════════════
   {
-    id: 'azure',
-    name: 'Azure',
-    icon: '🌐',
-    color: '#0078d4',
-    desc: 'Microsoft Azure — fundamentos ao arquiteto',
+    id: 'azure', name: 'Azure', icon: '🌐', color: '#0078d4',
+    desc: 'Microsoft Azure — do AZ-900 ao Solutions Architect',
     sections: [
       {
         title: '🏗 FUNDAMENTOS',
         items: [
-          { id:'az_what',    text: 'Azure Portal, CLI (az login), Cloud Shell'            },
-          { id:'az_sub',     text: 'Subscriptions, Resource Groups, Management Groups'    },
-          { id:'az_ad',      text: 'Azure Active Directory: tenants, users, groups'       },
-          { id:'az_rbac',    text: 'RBAC: roles, assignments, scopes'                     },
-          { id:'az_region',  text: 'Regiões, pares de região, availability zones'         },
+          { id:'az_what',    text: 'Azure Portal, Cloud Shell, CLI (az login, az account)'  },
+          { id:'az_sub',     text: 'Subscriptions, Resource Groups, Management Groups, Tenants'},
+          { id:'az_ad',      text: 'Entra ID (AAD): users, groups, B2B, B2C, conditional access'},
+          { id:'az_rbac',    text: 'RBAC: built-in roles, custom roles, assignments, scopes' },
+          { id:'az_region',  text: 'Regiões, pares de região, Availability Zones, soberania' },
+          { id:'az_policy',  text: 'Azure Policy: definitions, initiatives, remediation tasks'},
         ]
       },
       {
         title: '💻 COMPUTE',
         items: [
-          { id:'az_vm',      text: 'Azure VMs: sizes, disks, availability sets'           },
-          { id:'az_vmss',    text: 'VM Scale Sets: autoscaling horizontal'                 },
-          { id:'az_func',    text: 'Azure Functions: serverless, triggers, bindings'       },
-          { id:'az_aks',     text: 'AKS: Kubernetes gerenciado, node pools, AGIC'         },
-          { id:'az_aci',     text: 'Container Instances: containers simples'               },
+          { id:'az_vm',      text: 'Azure VMs: series, disks managed, availability sets'     },
+          { id:'az_vmss',    text: 'VM Scale Sets: flexible/uniform, autoscale profiles'     },
+          { id:'az_func',    text: 'Azure Functions: triggers, bindings, Durable Functions'  },
+          { id:'az_app',     text: 'App Service: plans, deployment slots, custom domains'    },
+          { id:'az_aks',     text: 'AKS: node pools, AGIC, KEDA, AAD integration, add-ons'  },
+          { id:'az_aci',     text: 'Container Instances: groups, init containers, virtual nodes'},
         ]
       },
       {
         title: '🗄 STORAGE & DADOS',
         items: [
-          { id:'az_st',      text: 'Storage Account: Blob, Files, Queue, Table'           },
-          { id:'az_sql',     text: 'Azure SQL Database: DTU vs vCore, geo-replication'    },
-          { id:'az_cosmos',  text: 'CosmosDB: APIs (SQL, Mongo, Cassandra), consistência'  },
-          { id:'az_redis',   text: 'Azure Cache for Redis'                                 },
+          { id:'az_st',      text: 'Storage Account: Blob, Files, Queue, Table, ADLS Gen2'  },
+          { id:'az_blob',    text: 'Blob: tiers (hot/cool/archive), lifecycle, versioning'   },
+          { id:'az_sql',     text: 'Azure SQL: DTU vs vCore, hyperscale, geo-replication'    },
+          { id:'az_cosmos',  text: 'CosmosDB: APIs, partition key, RU/s, consistency levels' },
+          { id:'az_redis',   text: 'Cache for Redis: tiers, persistence, cluster mode'       },
+          { id:'az_synapse', text: 'Synapse Analytics: SQL pools, Spark, pipelines'          },
         ]
       },
       {
         title: '🌐 REDE',
         items: [
-          { id:'az_vnet',    text: 'VNet: subnets, NSG, peering, Service Endpoints'       },
-          { id:'az_lb',      text: 'Load Balancer, Application Gateway, Front Door'        },
-          { id:'az_vpn',     text: 'VPN Gateway, ExpressRoute, Virtual WAN'               },
-          { id:'az_dns',     text: 'Azure DNS, Private DNS Zones'                          },
+          { id:'az_vnet',    text: 'VNet: subnets, NSG, ASG, peering, service endpoints'    },
+          { id:'az_lb',      text: 'Load Balancer (L4), Application Gateway (L7/WAF), FD'   },
+          { id:'az_vpn',     text: 'VPN Gateway: P2S/S2S, SKUs, ExpressRoute, Virtual WAN'  },
+          { id:'az_dns',     text: 'Azure DNS, Private DNS Zones, Private Endpoint'          },
+          { id:'az_afd',     text: 'Azure Front Door: CDN, WAF, origin groups, caching'     },
+          { id:'az_fw',      text: 'Azure Firewall: rules, DNAT, threat intel, Premium'      },
         ]
       },
       {
-        title: '⚡ DEVOPS',
+        title: '⚡ DEVOPS & IaC',
         items: [
-          { id:'az_dev',     text: 'Azure DevOps: Boards, Repos, Pipelines, Artifacts'    },
-          { id:'az_acr',     text: 'Azure Container Registry (ACR)'                        },
-          { id:'az_arm',     text: 'ARM Templates e Bicep: IaC nativo Azure'              },
-          { id:'az_mon',     text: 'Azure Monitor, Log Analytics, Application Insights'    },
+          { id:'az_dev',     text: 'Azure DevOps: Boards, Repos, Pipelines YAML, Artifacts'  },
+          { id:'az_gha',     text: 'GitHub Actions com Azure: OIDC, service principal'       },
+          { id:'az_acr',     text: 'ACR: geo-replication, tasks, webhooks, quarantine'       },
+          { id:'az_arm',     text: 'ARM Templates: linked/nested, what-if, deployment stacks' },
+          { id:'az_bicep',   text: 'Bicep: modules, parameters, targetScope, existing'       },
+          { id:'az_mon',     text: 'Azure Monitor: Log Analytics, KQL, Application Insights' },
+        ]
+      },
+      {
+        title: '🔒 SEGURANÇA',
+        items: [
+          { id:'az_kv',      text: 'Key Vault: secrets, keys, certs, RBAC vs access policy' },
+          { id:'az_def',     text: 'Defender for Cloud: recommendations, MCSB, plans'        },
+          { id:'az_sent',    text: 'Microsoft Sentinel: connectors, analytics, workbooks'    },
+          { id:'az_mi',      text: 'Managed Identity: system/user assigned, workload identity'},
+        ]
+      },
+      {
+        title: '🔧 INTERMEDIÁRIO',
+        items: [
+          { id:'az_int1',    text: 'Service Bus: queues, topics, subscriptions, sessions'    },
+          { id:'az_int2',    text: 'Event Grid: system topics, custom topics, domains'       },
+          { id:'az_int3',    text: 'Event Hubs: partitions, consumer groups, Kafka protocol' },
+          { id:'az_int4',    text: 'API Management: policies, developer portal, subscriptions'},
+          { id:'az_int5',    text: 'Logic Apps: connectors, Standard vs Consumption'         },
+          { id:'az_int6',    text: 'Container Apps: environments, revisions, scaling rules'  },
+        ]
+      },
+      {
+        title: '🚀 AVANÇADO',
+        items: [
+          { id:'az_adv1',    text: 'Landing Zone: CAF, hub-spoke, management baseline'       },
+          { id:'az_adv2',    text: 'AKS avançado: KEDA, AGIC, CAPI, node auto-provisioning' },
+          { id:'az_adv3',    text: 'Azure Arc: hybrid/multi-cloud, Arc-enabled Kubernetes'   },
+          { id:'az_adv4',    text: 'Well-Architected Framework: pilares e assessment tool'   },
+          { id:'az_adv5',    text: 'FinOps Azure: reservas, hybrid benefit, cost management' },
         ]
       }
     ]
   },
 
+  // ════════════════════════ CI/CD ════════════════════════
   {
-    id: 'cicd',
-    name: 'CI/CD',
-    icon: '⚡',
-    color: '#f05a28',
+    id: 'cicd', name: 'CI/CD', icon: '⚡', color: '#f05a28',
     desc: 'Pipelines de integração e entrega contínua',
     sections: [
       {
-        title: '📖 CONCEITOS',
+        title: '📖 CONCEITOS ESSENCIAIS',
         items: [
-          { id:'ci_what',    text: 'CI vs CD vs CD: diferenças e objetivos'               },
-          { id:'ci_flow',    text: 'Fluxo: commit → build → test → deploy'               },
-          { id:'ci_strat',   text: 'Estratégias de deploy: blue/green, canary, rolling'   },
-          { id:'ci_gitflow', text: 'GitFlow, trunk-based development, feature flags'       },
-          { id:'ci_12f',     text: '12-factor app: boas práticas para CI/CD'              },
+          { id:'ci_what',    text: 'CI vs CD (Delivery) vs CD (Deployment): objetivos'      },
+          { id:'ci_flow',    text: 'Pipeline: commit → build → test → scan → deploy'        },
+          { id:'ci_strat',   text: 'Estratégias: blue/green, canary, rolling, dark launch'  },
+          { id:'ci_gitflow', text: 'GitFlow vs trunk-based vs GitHub Flow vs Release Flow'   },
+          { id:'ci_12f',     text: '12-factor app: build/release/run, config, disposability' },
+          { id:'ci_dora',    text: 'DORA metrics: deploy frequency, lead time, MTTR, CFR'   },
         ]
       },
       {
         title: '🔄 GITHUB ACTIONS',
         items: [
-          { id:'ci_gha1',    text: 'Estrutura: workflow, jobs, steps, triggers'           },
-          { id:'ci_gha2',    text: 'Actions marketplace: actions/checkout, setup-node'    },
-          { id:'ci_gha3',    text: 'Secrets, env vars, contexts e expressions'            },
-          { id:'ci_gha4',    text: 'Runners: GitHub-hosted vs self-hosted'                },
-          { id:'ci_gha5',    text: 'Matrix builds, reusable workflows, environments'       },
-          { id:'ci_gha6',    text: 'Deploy para AWS/Azure/GCP com OIDC (sem senhas)'      },
+          { id:'ci_gha1',    text: 'Workflow: on (triggers), jobs, steps, needs, runs-on'   },
+          { id:'ci_gha2',    text: 'Actions: uses, with, env, actions/checkout, setup-*'    },
+          { id:'ci_gha3',    text: 'Secrets, vars, contexts (github, env, steps, needs)'    },
+          { id:'ci_gha4',    text: 'Runners: GitHub-hosted, self-hosted, group, ARC'        },
+          { id:'ci_gha5',    text: 'Matrix strategy: OS, versions, include/exclude'          },
+          { id:'ci_gha6',    text: 'Reusable workflows, composite actions, callable'         },
+          { id:'ci_gha7',    text: 'OIDC (sem senha): AWS/Azure/GCP com permissions: id-token'},
+          { id:'ci_gha8',    text: 'Environments, required reviewers, deployment protection' },
+          { id:'ci_gha9',    text: 'Cache: actions/cache, restore-keys, cache key patterns'  },
         ]
       },
       {
         title: '🎡 ARGOCD / GITOPS',
         items: [
-          { id:'ci_argo1',   text: 'GitOps: o que é, princípios, benefícios'             },
-          { id:'ci_argo2',   text: 'ArgoCD: install, configurar Application'              },
-          { id:'ci_argo3',   text: 'Sync policies: manual, auto, prune, self-heal'        },
-          { id:'ci_argo4',   text: 'ApplicationSet: deploy multi-cluster/multi-env'       },
-          { id:'ci_argo5',   text: 'Notifications, RBAC, SSO no ArgoCD'                  },
+          { id:'ci_argo1',   text: 'GitOps: princípios, reconciliation loop, desired state' },
+          { id:'ci_argo2',   text: 'ArgoCD: install, Application, AppProject, repositories'  },
+          { id:'ci_argo3',   text: 'Sync policies: manual, auto, prune, selfHeal, replace'  },
+          { id:'ci_argo4',   text: 'ApplicationSet: generators (git, cluster, matrix, merge)'},
+          { id:'ci_argo5',   text: 'Notifications, metrics, RBAC, SSO (Dex, OIDC)'          },
+          { id:'ci_argo6',   text: 'Argo Rollouts: canary, blue-green, analysis, steps'      },
+          { id:'ci_argo7',   text: 'Argo Workflows: DAG, template, artifact, retry'          },
         ]
       },
       {
         title: '🤵 JENKINS',
         items: [
-          { id:'ci_jen1',    text: 'Instalar Jenkins e configurar plugins'                },
-          { id:'ci_jen2',    text: 'Declarative Pipeline: agent, stages, steps'           },
-          { id:'ci_jen3',    text: 'Jenkinsfile: checkout, build, test, deploy'           },
-          { id:'ci_jen4',    text: 'Shared Libraries e Groovy scripts'                    },
+          { id:'ci_jen1',    text: 'Instalar Jenkins: WAR, Docker, Kubernetes (JCasC)'      },
+          { id:'ci_jen2',    text: 'Declarative Pipeline: agent, stages, steps, post, when' },
+          { id:'ci_jen3',    text: 'Jenkinsfile: checkout SCM, build, test, archive, deploy' },
+          { id:'ci_jen4',    text: 'Shared Libraries: vars/, src/, resources/, @NonCPS'     },
+          { id:'ci_jen5',    text: 'Pipeline as Code: multibranch, organization folders'    },
         ]
       },
       {
-        title: '🧪 QUALIDADE & TESTES',
+        title: '🦊 GITLAB CI',
         items: [
-          { id:'ci_test1',   text: 'Unit tests, integration tests no pipeline'            },
-          { id:'ci_test2',   text: 'SAST: SonarQube, CodeQL, Semgrep'                    },
-          { id:'ci_test3',   text: 'Container scan: Trivy, Grype, Snyk'                   },
-          { id:'ci_test4',   text: 'Smoke tests e health checks pós-deploy'              },
+          { id:'ci_gl1',     text: '.gitlab-ci.yml: stages, jobs, rules, needs, extends'    },
+          { id:'ci_gl2',     text: 'GitLab Runner: executor (docker/k8s/shell), registration'},
+          { id:'ci_gl3',     text: 'Environments, deployments, auto DevOps, Review Apps'    },
+          { id:'ci_gl4',     text: 'Artifacts, cache, includes, templates, YAML anchors'    },
+        ]
+      },
+      {
+        title: '🧪 QUALIDADE & SEGURANÇA',
+        items: [
+          { id:'ci_test1',   text: 'Unit/integration/e2e tests: test reports, coverage'     },
+          { id:'ci_test2',   text: 'SAST: SonarQube, CodeQL, Semgrep, Checkov'              },
+          { id:'ci_test3',   text: 'Container/IaC scan: Trivy, Grype, Snyk, tfsec, kube-score'},
+          { id:'ci_test4',   text: 'DAST: OWASP ZAP, Nuclei em pipeline'                    },
+          { id:'ci_test5',   text: 'Smoke tests, health checks, rollback automático'         },
+          { id:'ci_test6',   text: 'Chaos engineering: Chaos Monkey, LitmusChaos'           },
+        ]
+      },
+      {
+        title: '🚀 AVANÇADO',
+        items: [
+          { id:'ci_adv1',    text: 'Pipeline orchestration: Tekton, Argo Workflows'          },
+          { id:'ci_adv2',    text: 'Progressive delivery: Flagger, Iter8, feature flags'    },
+          { id:'ci_adv3',    text: 'Internal Developer Platform: Backstage, Port, Humanitec' },
+          { id:'ci_adv4',    text: 'Supply chain security: SLSA levels, SBOM, Sigstore'     },
+          { id:'ci_adv5',    text: 'GitOps multi-cluster: Fleet, ArgoCD app of apps, Flux'  },
         ]
       }
     ]
   },
 
+  // ════════════════════════ DEVSECOPS ════════════════════════
   {
-    id: 'security',
-    name: 'DevSecOps',
-    icon: '🔒',
-    color: '#ff4455',
+    id: 'security', name: 'DevSecOps', icon: '🔒', color: '#ff4455',
     desc: 'Segurança integrada ao ciclo DevOps',
     sections: [
       {
         title: '🛡 FUNDAMENTOS',
         items: [
-          { id:'sc_what',    text: 'DevSecOps: shift-left security, cultura'              },
-          { id:'sc_cia',     text: 'CIA Triad: Confidencialidade, Integridade, Disponibilidade' },
-          { id:'sc_threat',  text: 'Threat modeling: STRIDE, attack trees'                },
-          { id:'sc_zero',    text: 'Zero Trust Architecture: never trust, always verify'  },
+          { id:'sc_what',    text: 'DevSecOps: shift-left security, cultura, responsabilidade'},
+          { id:'sc_cia',     text: 'CIA Triad + AAA: Confidencialidade, Integridade, Disponibilidade'},
+          { id:'sc_threat',  text: 'Threat modeling: STRIDE, PASTA, attack trees, MITRE ATT&CK'},
+          { id:'sc_zero',    text: 'Zero Trust: never trust, always verify, microsegmentação' },
+          { id:'sc_owasp',   text: 'OWASP Top 10: injection, broken auth, SSRF, XXE, etc.'   },
         ]
       },
       {
-        title: '🔍 SAST & DAST',
+        title: '🔍 SAST, DAST & SCA',
         items: [
-          { id:'sc_sast',    text: 'SAST: análise estática de código (SonarQube, Semgrep)'},
-          { id:'sc_dast',    text: 'DAST: testes dinâmicos (OWASP ZAP, Burp Suite)'      },
-          { id:'sc_sca',     text: 'SCA: dependências vulneráveis (Snyk, Dependabot)'     },
-          { id:'sc_secrets', text: 'Secrets scanning: GitLeaks, TruffleHog, detect-secrets'},
+          { id:'sc_sast',    text: 'SAST: SonarQube, Semgrep, CodeQL — integrar em pipeline' },
+          { id:'sc_dast',    text: 'DAST: OWASP ZAP, Burp Suite, Nuclei — testes dinâmicos'  },
+          { id:'sc_sca',     text: 'SCA: Snyk, Dependabot, OWASP Dependency-Check, OSV'      },
+          { id:'sc_secrets', text: 'Secrets scanning: Gitleaks, TruffleHog, detect-secrets'   },
+          { id:'sc_iast',    text: 'IAST / RASP: agentes in-app (Contrast, Seeker)'           },
+          { id:'sc_fuzz',    text: 'Fuzzing: AFL++, libFuzzer, OSS-Fuzz'                      },
         ]
       },
       {
         title: '☁ CLOUD SECURITY',
         items: [
-          { id:'sc_iam',     text: 'IAM least privilege: policies, conditions, SCPs'      },
-          { id:'sc_cspm',    text: 'CSPM: Prisma Cloud, AWS Security Hub, Defender'       },
-          { id:'sc_net',     text: 'Segmentação de rede: SG, NACL, VPC Firewall'          },
-          { id:'sc_enc',     text: 'Criptografia em trânsito (TLS) e em repouso (KMS)'   },
+          { id:'sc_iam',     text: 'IAM least privilege: policies, conditions, SCPs, ACLs'   },
+          { id:'sc_cspm',    text: 'CSPM: Prisma Cloud, AWS Security Hub, Defender for Cloud' },
+          { id:'sc_cwpp',    text: 'CWPP: container runtime security, Falco, Sysdig'          },
+          { id:'sc_net',     text: 'Segmentação de rede: SG, NACL, VPC Firewall, Cilium'     },
+          { id:'sc_enc',     text: 'Criptografia: TLS (mTLS), KMS, HSM, envelope encryption' },
+          { id:'sc_pos',     text: 'Cloud posture: Prowler, ScoutSuite, CloudSploit'          },
         ]
       },
       {
-        title: '📋 COMPLIANCE',
+        title: '🐳 CONTAINER SECURITY',
         items: [
-          { id:'sc_cmp1',    text: 'CIS Benchmarks: hardening de cloud e containers'      },
-          { id:'sc_cmp2',    text: 'SOC 2, ISO 27001, PCI DSS conceitos'                  },
-          { id:'sc_cmp3',    text: 'OPA/Rego: policy as code para Kubernetes/Terraform'   },
+          { id:'sc_img',     text: 'Image scanning: Trivy, Grype, Docker Scout em pipeline'  },
+          { id:'sc_rt',      text: 'Runtime security: Falco, regras de comportamento anômalo' },
+          { id:'sc_k8ssec',  text: 'K8s security: PSA, OPA Gatekeeper, Kyverno policies'     },
+          { id:'sc_netpol',  text: 'Network policies: zero-trust k8s, Cilium policies'        },
+          { id:'sc_sign',    text: 'Image signing: cosign, sigstore, admission webhooks'      },
+        ]
+      },
+      {
+        title: '📋 COMPLIANCE & AUDITORIA',
+        items: [
+          { id:'sc_cmp1',    text: 'CIS Benchmarks: cloud/container/OS hardening'             },
+          { id:'sc_cmp2',    text: 'SOC 2, ISO 27001, PCI DSS, LGPD conceitos e controles'  },
+          { id:'sc_cmp3',    text: 'OPA/Rego: policy as code para K8s, Terraform, OPA Gatekeeper'},
+          { id:'sc_cmp4',    text: 'Compliance as code: Chef InSpec, OpenSCAP, Regula'        },
+          { id:'sc_cmp5',    text: 'Audit logging: CloudTrail, Azure Monitor, GCP Audit Logs' },
+        ]
+      },
+      {
+        title: '🚨 INCIDENT RESPONSE',
+        items: [
+          { id:'sc_ir1',     text: 'IR lifecycle: preparação, detecção, contenção, erradicação'},
+          { id:'sc_ir2',     text: 'SIEM: Splunk, Elastic SIEM, Microsoft Sentinel, QRadar'  },
+          { id:'sc_ir3',     text: 'Forense digital: preservação de evidências, chain of custody'},
+          { id:'sc_ir4',     text: 'Playbooks e runbooks: automação de resposta a incidentes' },
+        ]
+      },
+      {
+        title: '🚀 AVANÇADO',
+        items: [
+          { id:'sc_adv1',    text: 'SBOM: CycloneDX, SPDX, geração e análise de dependências'},
+          { id:'sc_adv2',    text: 'SLSA framework: níveis 1-4, build integrity, provenance'  },
+          { id:'sc_adv3',    text: 'mTLS: service mesh security, Istio, SPIFFE/SPIRE'         },
+          { id:'sc_adv4',    text: 'Bug bounty e pentest: HackerOne, Bugcrowd, PTES'          },
+          { id:'sc_adv5',    text: 'Red team / Blue team / Purple team exercises'             },
         ]
       }
     ]
   },
 
+  // ════════════════════════ OBSERVABILITY ════════════════════════
   {
-    id: 'monitoring',
-    name: 'Observability',
-    icon: '📡',
-    color: '#e6522c',
-    desc: 'Prometheus, Grafana, ELK e tracing',
+    id: 'monitoring', name: 'Observability', icon: '📡', color: '#e6522c',
+    desc: 'Métricas, logs, traces e SRE',
     sections: [
       {
-        title: '📊 PILARES',
+        title: '📊 FUNDAMENTOS',
         items: [
-          { id:'ob_3p',      text: 'Os 3 pilares: Métricas, Logs e Traces'               },
-          { id:'ob_sli',     text: 'SLI, SLO, SLA, Error Budgets — SRE mindset'          },
-          { id:'ob_alert',   text: 'Alerting: boas práticas, runbooks, on-call'           },
+          { id:'ob_3p',      text: 'Os 3 pilares: Métricas, Logs, Traces + Events'          },
+          { id:'ob_sli',     text: 'SLI, SLO, SLA, Error Budgets, toil — SRE mindset'       },
+          { id:'ob_alert',   text: 'Alerting: symptom vs cause, runbooks, on-call rotations' },
+          { id:'ob_card',    text: 'USE method (CPU/memory) vs RED method (request-oriented)' },
         ]
       },
       {
         title: '📈 PROMETHEUS & GRAFANA',
         items: [
-          { id:'ob_prom1',   text: 'Prometheus: arquitetura, scrape, data model'          },
-          { id:'ob_prom2',   text: 'PromQL: queries, funções rate, irate, histogram'      },
-          { id:'ob_prom3',   text: 'Alertmanager: routing, silences, receivers'           },
-          { id:'ob_graf1',   text: 'Grafana: data sources, dashboards, panels'            },
-          { id:'ob_graf2',   text: 'Grafana Alerts e On-call scheduling'                  },
-          { id:'ob_exp',     text: 'Exporters: node, blackbox, JMX, custom'               },
+          { id:'ob_prom1',   text: 'Prometheus: pull model, scrape, TSDB, cardinality'       },
+          { id:'ob_prom2',   text: 'PromQL: selectors, rate, irate, histogram_quantile, aggregations'},
+          { id:'ob_prom3',   text: 'Alertmanager: routes, inhibition, silence, receivers'    },
+          { id:'ob_graf1',   text: 'Grafana: data sources, dashboards, panels, variables'    },
+          { id:'ob_graf2',   text: 'Grafana: alerts, on-call, IRM, annotations'              },
+          { id:'ob_exp',     text: 'Exporters: node, blackbox, JMX, custom go/python'        },
+          { id:'ob_stkop',   text: 'kube-prometheus-stack: Operator, ServiceMonitor, PodMonitor'},
         ]
       },
       {
         title: '📋 LOGGING',
         items: [
-          { id:'ob_elk1',    text: 'ELK Stack: Elasticsearch, Logstash, Kibana'           },
-          { id:'ob_elk2',    text: 'Loki + Promtail + Grafana (stack leve)'               },
-          { id:'ob_flue',    text: 'Fluentd/Fluent Bit: coleta e parsing de logs'         },
-          { id:'ob_kql',     text: 'KQL/Lucene: queries em logs Elasticsearch/Kibana'     },
+          { id:'ob_elk1',    text: 'ELK Stack: Elasticsearch (índices, shards), Logstash, Kibana'},
+          { id:'ob_elk2',    text: 'Loki + Promtail + Grafana: stack leve e integrada'       },
+          { id:'ob_flue',    text: 'Fluentd/Fluent Bit: parsing, filters, output plugins'    },
+          { id:'ob_kql',     text: 'KQL/Lucene queries: full-text, aggregations, time filters'},
+          { id:'ob_struct',  text: 'Structured logging: JSON, correlation IDs, trace context' },
+          { id:'ob_vect',    text: 'Vector.dev: coleta, transformação, roteamento de logs'   },
         ]
       },
       {
         title: '🔭 DISTRIBUTED TRACING',
         items: [
-          { id:'ob_otel',    text: 'OpenTelemetry: SDK, instrumentação automática'        },
-          { id:'ob_jaeg',    text: 'Jaeger / Zipkin: visualizar traces'                   },
-          { id:'ob_span',    text: 'Spans, traces, context propagation'                   },
+          { id:'ob_otel',    text: 'OpenTelemetry: SDK, API, Collector, auto-instrumentation' },
+          { id:'ob_jaeg',    text: 'Jaeger / Zipkin: visualizar traces, service graphs'       },
+          { id:'ob_span',    text: 'Spans, traces, baggage, context propagation (W3C)'        },
+          { id:'ob_otlp',    text: 'OTLP protocol: grpc/http, exporters, processors'          },
+          { id:'ob_tempo',   text: 'Grafana Tempo: backend de traces, trace-to-metrics/logs'  },
+        ]
+      },
+      {
+        title: '🔧 INTERMEDIÁRIO',
+        items: [
+          { id:'ob_int1',    text: 'High cardinality metrics: Thanos, Cortex, Mimir, VictoriaMetrics'},
+          { id:'ob_int2',    text: 'Long-term storage: Thanos sidecar/receive, compaction'   },
+          { id:'ob_int3',    text: 'Synthetic monitoring: blackbox exporter, uptime checks'  },
+          { id:'ob_int4',    text: 'APM: Elastic APM, Datadog APM, Dynatrace, New Relic'    },
+          { id:'ob_int5',    text: 'SLO tracking: sloth, pyrra, OpenSLO spec'               },
+        ]
+      },
+      {
+        title: '🚀 AVANÇADO',
+        items: [
+          { id:'ob_adv1',    text: 'eBPF observability: Pixie, Cilium Hubble, Groundcover'   },
+          { id:'ob_adv2',    text: 'Continuous profiling: Parca, Pyroscope, Grafana Pyroscope'},
+          { id:'ob_adv3',    text: 'AIOps: anomaly detection, forecasting, Prometheus ML'    },
+          { id:'ob_adv4',    text: 'Observability as code: Grizzly, Terraform Grafana provider'},
+          { id:'ob_adv5',    text: 'Incident management: PagerDuty, OpsGenie, Rootly, FireHydrant'},
         ]
       }
     ]
   },
 
+  // ════════════════════════ NETWORKING ════════════════════════
   {
-    id: 'networking',
-    name: 'Networking',
-    icon: '🌐',
-    color: '#00aa88',
-    desc: 'Fundamentos de redes para DevOps/Cloud',
+    id: 'networking', name: 'Networking', icon: '🌐', color: '#00aa88',
+    desc: 'Redes do OSI ao cloud networking avançado',
     sections: [
       {
         title: '🌐 MODELO OSI & TCP/IP',
         items: [
-          { id:'nw_osi',     text: 'Modelo OSI: 7 camadas e funções'                      },
-          { id:'nw_tcp',     text: 'TCP/IP: handshake, flags, estados'                    },
-          { id:'nw_udp',     text: 'UDP vs TCP: quando usar cada um'                      },
-          { id:'nw_ip',      text: 'Endereçamento IP, sub-redes, CIDR, máscara'           },
-          { id:'nw_ipv6',    text: 'IPv6: estrutura de endereços, migração'               },
+          { id:'nw_osi',     text: 'Modelo OSI: 7 camadas, funções e protocolos por camada'  },
+          { id:'nw_tcp',     text: 'TCP: three-way handshake, flags, estados, janela, MSS'   },
+          { id:'nw_udp',     text: 'UDP: uso, QUIC, comparação com TCP'                      },
+          { id:'nw_ip',      text: 'IPv4: endereçamento, CIDR, sub-redes, subnetting'        },
+          { id:'nw_ipv6',    text: 'IPv6: EUI-64, SLAAC, DHCPv6, dual-stack, migração'      },
+          { id:'nw_arp',     text: 'ARP, RARP, Gratuitous ARP, NDP (IPv6)'                   },
         ]
       },
       {
         title: '🔧 PROTOCOLOS ESSENCIAIS',
         items: [
-          { id:'nw_dns',     text: 'DNS: resolução, tipos de registro (A, CNAME, MX, TXT)'},
-          { id:'nw_http',    text: 'HTTP/HTTPS: métodos, status codes, headers'           },
-          { id:'nw_tls',     text: 'TLS/SSL: handshake, certificados, Let\'s Encrypt'    },
-          { id:'nw_ssh',     text: 'SSH: autenticação, tunelamento, port forwarding'      },
-          { id:'nw_load',    text: 'Load Balancing: L4 vs L7, algoritmos, health checks' },
+          { id:'nw_dns',     text: 'DNS: resolução recursiva/iterativa, tipos (A/AAAA/CNAME/MX/TXT/SRV)'},
+          { id:'nw_http',    text: 'HTTP/1.1, HTTP/2 (multiplexing), HTTP/3 (QUIC), métodos, status'},
+          { id:'nw_tls',     text: 'TLS 1.3: handshake, cipher suites, MTLS, Lets Encrypt, HSTS'},
+          { id:'nw_ssh',     text: 'SSH: key exchange, agent forwarding, tunneling, ProxyJump'},
+          { id:'nw_load',    text: 'Load Balancing: L4 vs L7, algoritmos, session persistence'},
+          { id:'nw_bgp',     text: 'BGP básico: ASN, prefixos, iBGP/eBGP, anúncios de rotas'},
+        ]
+      },
+      {
+        title: '🔒 SEGURANÇA DE REDE',
+        items: [
+          { id:'nw_fw',      text: 'Firewalls: stateful, stateless, NGFW, WAF'               },
+          { id:'nw_ids',     text: 'IDS/IPS: Snort, Suricata, regras, modos inline/passive'  },
+          { id:'nw_vpn',     text: 'VPN: IPSec (IKEv2), OpenVPN, WireGuard — site-to-site'  },
+          { id:'nw_zero',    text: 'Zero Trust Network Access: BeyondCorp, mTLS, SPIFFE'     },
+          { id:'nw_ddos',    text: 'DDoS mitigation: CloudFlare, AWS Shield, rate limiting'  },
         ]
       },
       {
         title: '☁ CLOUD NETWORKING',
         items: [
-          { id:'nw_vpc',     text: 'VPC/VNet: design de rede em nuvem'                    },
-          { id:'nw_cdn',     text: 'CDN: como funciona, edge locations, cache'            },
-          { id:'nw_vpn',     text: 'VPN Site-to-Site e Client VPN'                        },
-          { id:'nw_sd',      text: 'Service Discovery: DNS, Consul, Kubernetes DNS'       },
+          { id:'nw_vpc',     text: 'VPC/VNet: design, hub-spoke, subnets, route tables'      },
+          { id:'nw_cdn',     text: 'CDN: edge caches, origin shield, cache-control headers'  },
+          { id:'nw_vpngw',   text: 'VPN Gateway, Direct Connect/ExpressRoute, Transit Gateway'},
+          { id:'nw_sd',      text: 'Service Discovery: DNS, Consul, Kubernetes CoreDNS, Eureka'},
+          { id:'nw_mesh',    text: 'Service Mesh: Istio, Linkerd, Consul Connect — sidecar'  },
+          { id:'nw_ingress', text: 'Ingress controllers: NGINX, Traefik, Kong, AWS ALB'      },
+        ]
+      },
+      {
+        title: '🔧 INTERMEDIÁRIO',
+        items: [
+          { id:'nw_int1',    text: 'VLAN, trunking 802.1Q, STP/RSTP, inter-VLAN routing'    },
+          { id:'nw_int2',    text: 'OSPF, EIGRP básico: link-state, DR/BDR, areas'           },
+          { id:'nw_int3',    text: 'MPLS: labels, LSP, VRF, L3VPN conceito'                 },
+          { id:'nw_int4',    text: 'SD-WAN: overlay, underlay, centralized policy, vManage'  },
+          { id:'nw_int5',    text: 'Network automation: Netmiko, NAPALM, Nornir, Ansible'    },
+        ]
+      },
+      {
+        title: '🚀 AVANÇADO',
+        items: [
+          { id:'nw_adv1',    text: 'eBPF networking: XDP, TC, Cilium, Katran, Cloudflare'   },
+          { id:'nw_adv2',    text: 'DPDK: kernel bypass, alta performance, SmartNICs'        },
+          { id:'nw_adv3',    text: 'gRPC, Protocol Buffers, HTTP/2 internals'                },
+          { id:'nw_adv4',    text: 'QUIC internals: streams, congestion control, migration'  },
+          { id:'nw_adv5',    text: 'Network observability: flow analysis, NetFlow/IPFIX, eBPF'},
         ]
       }
     ]
   },
 
+  // ════════════════════════ GIT ════════════════════════
   {
-    id: 'git',
-    name: 'Git & GitHub',
-    icon: '🔀',
-    color: '#f05032',
-    desc: 'Controle de versão e colaboração',
+    id: 'git', name: 'Git & GitHub', icon: '🔀', color: '#f05032',
+    desc: 'Controle de versão, colaboração e automação',
     sections: [
       {
         title: '🔀 FUNDAMENTOS',
         items: [
-          { id:'gt_init',    text: 'git init, clone, status, add, commit, push, pull'     },
-          { id:'gt_cfg',     text: 'git config: user.name, email, editor, aliases'        },
-          { id:'gt_area',    text: 'Working tree, staging area, repositório local/remoto'  },
-          { id:'gt_hist',    text: 'git log, diff, show, blame, bisect'                   },
+          { id:'gt_init',    text: 'git init, clone, status, add, commit, push, pull, fetch' },
+          { id:'gt_cfg',     text: 'git config: user, email, editor, aliases, includeIf'    },
+          { id:'gt_area',    text: 'Working tree, staging area, local repo, remote'           },
+          { id:'gt_hist',    text: 'git log (--oneline, --graph, --all), diff, show, blame'  },
+          { id:'gt_undo',    text: 'Desfazer: reset (soft/mixed/hard), revert, restore'      },
         ]
       },
       {
-        title: '🌿 BRANCHING',
+        title: '🌿 BRANCHING & MERGE',
         items: [
-          { id:'gt_br',      text: 'Branches: criar, listar, deletar, rename'             },
-          { id:'gt_merge',   text: 'Merge: fast-forward, recursive, octopus'              },
-          { id:'gt_rebase',  text: 'Rebase: rebase interativo, squash, fixup'             },
-          { id:'gt_cr',      text: 'Cherry-pick e stash'                                  },
-          { id:'gt_tag',     text: 'Tags: annotated vs lightweight, versionamento'        },
+          { id:'gt_br',      text: 'Branches: criar, listar, deletar, rename, track remote'  },
+          { id:'gt_merge',   text: 'Merge: fast-forward, recursive (ort), octopus, --no-ff' },
+          { id:'gt_rebase',  text: 'Rebase: linear history, --interactive, squash, fixup'    },
+          { id:'gt_cr',      text: 'Cherry-pick: -x, range, --no-commit'                     },
+          { id:'gt_stash',   text: 'Stash: save, pop, apply, drop, list, branch from stash'  },
+          { id:'gt_tag',     text: 'Tags: annotated, lightweight, push --tags, verify'        },
         ]
       },
       {
-        title: '🔄 WORKFLOWS',
+        title: '🔄 WORKFLOWS & COLABORAÇÃO',
         items: [
-          { id:'gt_gf',      text: 'GitFlow: main, develop, feature, release, hotfix'     },
-          { id:'gt_tb',      text: 'Trunk-based development: feature flags, short-lived'   },
-          { id:'gt_pr',      text: 'Pull Requests: review, aprovação, merge strategies'   },
-          { id:'gt_protect', text: 'Branch protection: required reviews, CI checks'        },
+          { id:'gt_gf',      text: 'GitFlow: main, develop, feature/*, release/*, hotfix/*'  },
+          { id:'gt_tb',      text: 'Trunk-based: feature flags, short-lived branches'         },
+          { id:'gt_pr',      text: 'Pull Requests: review, aprovação, squash/rebase/merge'   },
+          { id:'gt_protect', text: 'Branch protection: required reviews, status checks, CODEOWNERS'},
+          { id:'gt_fork',    text: 'Fork workflow: upstream, sync, contribuição open source'  },
+          { id:'gt_conv',    text: 'Conventional commits: feat/fix/chore, BREAKING CHANGE'   },
         ]
       },
       {
-        title: '🔧 AVANÇADO',
+        title: '🔧 FERRAMENTAS AVANÇADAS',
         items: [
-          { id:'gt_hook',    text: 'Git Hooks: pre-commit, commit-msg, pre-push'          },
-          { id:'gt_sub',     text: 'Submodules e Subtrees'                                 },
-          { id:'gt_ref',     text: 'Reflog: recuperar commits perdidos'                    },
-          { id:'gt_sign',    text: 'Signed commits: GPG e SSH signing'                    },
+          { id:'gt_hook',    text: 'Git Hooks: pre-commit, commit-msg, pre-push, server-side'},
+          { id:'gt_sub',     text: 'Submodules: add, update, init, foreach'                   },
+          { id:'gt_sub2',    text: 'Subtrees: add, push, pull, split'                         },
+          { id:'gt_ref',     text: 'Reflog: recuperar commits, branches deletadas'            },
+          { id:'gt_sign',    text: 'Signed commits: GPG, SSH signing, vigilant mode'          },
+          { id:'gt_lfs',     text: 'Git LFS: rastrear binários, track, migrate'              },
+          { id:'gt_workt',   text: 'Git Worktree: múltiplos branches em paralelo'             },
+        ]
+      },
+      {
+        title: '🔧 INTERMEDIÁRIO',
+        items: [
+          { id:'gt_int1',    text: 'git bisect: encontrar regressões com busca binária'       },
+          { id:'gt_int2',    text: 'git filter-repo: reescrever histórico, remover segredos'  },
+          { id:'gt_int3',    text: 'Monorepo tools: Nx, Turborepo, Bazel, git sparse-checkout'},
+          { id:'gt_int4',    text: 'git notes, bundle, archive, format-patch, am'             },
+          { id:'gt_int5',    text: 'GitHub CLI (gh): PR, issues, workflows da linha de comando'},
+        ]
+      },
+      {
+        title: '🚀 AVANÇADO',
+        items: [
+          { id:'gt_adv1',    text: 'Git internals: objects (blob/tree/commit/tag), pack files' },
+          { id:'gt_adv2',    text: 'Plumbing commands: hash-object, cat-file, update-index'  },
+          { id:'gt_adv3',    text: 'GitHub Actions avançado: reusable, OIDC, environments'   },
+          { id:'gt_adv4',    text: 'GitOps: repo como source of truth, ArgoCD, FluxCD'        },
+          { id:'gt_adv5',    text: 'Gerrit, GitLab self-hosted: administração e customização' },
         ]
       }
     ]
   },
 
+  // ════════════════════════ PYTHON DEVOPS ════════════════════════
   {
-    id: 'python',
-    name: 'Python DevOps',
-    icon: '🐍',
-    color: '#3776ab',
-    desc: 'Python para automação e cloud',
+    id: 'python', name: 'Python DevOps', icon: '🐍', color: '#3776ab',
+    desc: 'Python para automação, cloud e SRE',
     sections: [
       {
         title: '🐍 FUNDAMENTOS',
         items: [
-          { id:'py_base',    text: 'Tipos, variáveis, f-strings, list comprehension'      },
-          { id:'py_func',    text: 'Funções, *args, **kwargs, decorators, generators'     },
-          { id:'py_oop',     text: 'Classes, herança, dunder methods, dataclasses'        },
-          { id:'py_exc',     text: 'Exceções: try/except/finally, custom exceptions'      },
-          { id:'py_env',     text: 'venv, pip, requirements.txt, pyproject.toml'          },
+          { id:'py_base',    text: 'Tipos, variáveis, f-strings, list/dict/set comprehension' },
+          { id:'py_func',    text: 'Funções, *args, **kwargs, closures, decorators'           },
+          { id:'py_gen',     text: 'Generators, iterators, yield, lazy evaluation'            },
+          { id:'py_oop',     text: 'Classes, herança, dunder methods, dataclasses, ABC'       },
+          { id:'py_exc',     text: 'Exceções: try/except/else/finally, custom, ExceptionGroup'},
+          { id:'py_env',     text: 'venv, pip, requirements.txt, pyproject.toml, uv, poetry' },
+          { id:'py_typing',  text: 'Type hints: mypy, pyright, Protocol, TypeVar, Annotated'  },
         ]
       },
       {
-        title: '⚙ AUTOMAÇÃO',
+        title: '⚙ AUTOMAÇÃO & SCRIPTING',
         items: [
-          { id:'py_os',      text: 'os, pathlib, shutil: manipulação de arquivos/dirs'   },
-          { id:'py_sub',     text: 'subprocess: executar comandos shell do Python'         },
-          { id:'py_re',      text: 'regex: re.match, search, findall, grupos'             },
-          { id:'py_yaml',    text: 'Parsing: json, yaml, toml, csv, configparser'         },
+          { id:'py_os',      text: 'os, pathlib: manipulação de arquivos, dirs, walk'         },
+          { id:'py_sub',     text: 'subprocess: run, Popen, check_output, shell=False'        },
+          { id:'py_re',      text: 'regex: re.compile, groups, lookahead, flags'              },
+          { id:'py_yaml',    text: 'Parsing: json, yaml (PyYAML/ruamel), toml, csv, configparser'},
+          { id:'py_click',   text: 'CLI tools: Click, Typer, argparse, Rich'                  },
+          { id:'py_sched',   text: 'Agendamento: schedule, APScheduler, cron via subprocess'  },
         ]
       },
       {
-        title: '☁ CLOUD & APIs',
+        title: '☁ CLOUD & APIS',
         items: [
-          { id:'py_req',     text: 'requests/httpx: APIs REST, auth, retry, sessions'    },
-          { id:'py_boto',    text: 'Boto3: AWS SDK — EC2, S3, Lambda, DynamoDB'           },
-          { id:'py_azure',   text: 'Azure SDK for Python: resources, auth'                },
-          { id:'py_fast',    text: 'FastAPI: criar APIs REST rapidamente'                  },
+          { id:'py_req',     text: 'requests/httpx: sessions, auth, retry, timeout, async'   },
+          { id:'py_boto',    text: 'Boto3: EC2, S3, Lambda, DynamoDB, STS, paginators'       },
+          { id:'py_azure',   text: 'Azure SDK: DefaultAzureCredential, recursos, async'       },
+          { id:'py_gcp',     text: 'GCP SDK: google-cloud-*, service accounts, impersonation'},
+          { id:'py_fast',    text: 'FastAPI: routers, dependency injection, OpenAPI, WebSocket'},
+          { id:'py_pyd',     text: 'Pydantic v2: models, validators, settings, serialization' },
         ]
       },
       {
-        title: '🐳 CONTAINERS & K8S',
+        title: '🐳 CONTAINERS & INFRA',
         items: [
-          { id:'py_dock',    text: 'Docker SDK for Python: gerenciar containers'           },
-          { id:'py_k8s',     text: 'kubernetes-client: deployments via Python'             },
-          { id:'py_cf',      text: 'AWS CloudFormation / CDK com Python'                  },
+          { id:'py_dock',    text: 'Docker SDK: containers, images, volumes, networks'        },
+          { id:'py_k8s',     text: 'kubernetes-client: watch, patch, port-forward, events'   },
+          { id:'py_tf',      text: 'python-terraform, CDK for Terraform, Pulumi Python'       },
+          { id:'py_ansible', text: 'Ansible com Python: módulos, plugins, callbacks, API'    },
+        ]
+      },
+      {
+        title: '🔧 INTERMEDIÁRIO',
+        items: [
+          { id:'py_int1',    text: 'asyncio: event loop, async/await, gather, TaskGroup'      },
+          { id:'py_int2',    text: 'aiohttp, httpx async: concurrent requests, semaphore'     },
+          { id:'py_int3',    text: 'SQLAlchemy: ORM, Core, migrations com Alembic'            },
+          { id:'py_int4',    text: 'Testing: pytest, fixtures, mocking, coverage, tox'        },
+          { id:'py_int5',    text: 'Logging: structlog, loguru, correlation ID, formatters'   },
+          { id:'py_int6',    text: 'OpenTelemetry SDK Python: traces, metrics, logs'          },
+          { id:'py_int7',    text: 'Message queues: pika (RabbitMQ), confluent-kafka'         },
+        ]
+      },
+      {
+        title: '🚀 AVANÇADO',
+        items: [
+          { id:'py_adv1',    text: 'Performance: profiling (cProfile, py-spy), memory leaks'  },
+          { id:'py_adv2',    text: 'Multiprocessing, threading, concurrent.futures'            },
+          { id:'py_adv3',    text: 'C extensions: ctypes, cffi, Cython, mypyc'                },
+          { id:'py_adv4',    text: 'Packaging: build, twine, PyPI, trusted publishers'        },
+          { id:'py_adv5',    text: 'Operator SDK Python: kopf, py-operator, controller logic' },
+          { id:'py_adv6',    text: 'Data: pandas, polars, DuckDB para scripts de automação'   },
         ]
       }
     ]
